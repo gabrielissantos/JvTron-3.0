@@ -19,7 +19,7 @@
 
 class Tela{
 public:
-	virtual int Run (sf::RenderWindow & app) = 0;
+	virtual int Executar(sf::RenderWindow & app) = 0;
 };
 
 #endif

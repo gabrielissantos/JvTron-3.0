@@ -1,5 +1,5 @@
 /*
-	JvTron: Trabalho 1
+	JvTron: Trabalho 3
 	Departamento de Computação
 	UFSCar Universidade Federal de São Carlos
 	Disciplina: Estrutura de Dados
@@ -9,7 +9,7 @@
 		Leonardo de Oliveira Peralta		726556
 		Gabrieli Santos						726523
     
-	Controle de Versão: https://github.com/joaobarbirato/JvTron
+	Controle de Versão: https://github.com/gabrielissantos/JvTron-3.0
 */
 
 // Incluir todas as telas
@@ -21,4 +21,5 @@
 
 // Incluir todas as telas
 #include "Menu.hpp"
+#include "Jogo.hpp"
 #endif // fim da inclusão

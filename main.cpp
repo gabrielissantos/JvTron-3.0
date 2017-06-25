@@ -36,11 +36,13 @@ int main (){
     // Preparacao das tela
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y); // TELA 0: menu do jogo
     telas.push_back(s0);
+    Jogo * s1 = new Jogo();
+    telas.push_back(s1);
 
     // loop principal
     while (numeroTela >= 0){
         if( (numeroTela = telas[numeroTela]->Run(App)) == 1 );// chamada do metodo que faz funcionar a tela atual
-            //telas[1] = new Campo();
+            telas[1] = new Jogo();
     } // fim loop principal
 
     return EXIT_SUCCESS; // fim do programa
