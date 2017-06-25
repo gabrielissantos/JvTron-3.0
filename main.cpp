@@ -15,7 +15,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
-#include "todasTelas.hpp"
+#include "TodasTelas.hpp"
 
 /* isso é o comando no terminal linux pra compilar o programa
     g++ -c main.cpp && g++ main.o todasTelas.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system && ./sfml-app 
@@ -41,7 +41,7 @@ int main (){
 
     // loop principal
     while (numeroTela >= 0){
-        if( (numeroTela = telas[numeroTela]->Run(App)) == 1 );// chamada do metodo que faz funcionar a tela atual
+        if( (numeroTela = telas[numeroTela]->Executar(App)) == 1 );// chamada do metodo que faz funcionar a tela atual
             telas[1] = new Jogo();
     } // fim loop principal
 

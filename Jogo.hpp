@@ -12,6 +12,10 @@
 	Controle de Versão: https://github.com/gabrielissantos/JvTron-3.0
 */
 
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include "Tela.hpp"
+
 class Jogo : public Tela{
 private:
 public:

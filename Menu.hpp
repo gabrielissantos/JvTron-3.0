@@ -36,7 +36,7 @@ private:
 public: // métodos privados
 	Menu(float larg, float alt);
 	~Menu();
-	virtual int Run(sf::RenderWindow& App);
+	virtual int Executar(sf::RenderWindow& App);
 };
 
 // Implementação dos métodos do menu
@@ -83,13 +83,13 @@ Menu::Menu(float larg, float alt): maxNumeroItens(3){
 // Deleta vetor de botões
 Menu::~Menu(){ delete botao; }; // fim Destrutor
 
-// Run
+// Executar
 // Recebe por referência a janela da biblioteca gráfica
-int Menu::Run(sf::RenderWindow &App){
+int Menu::Executar(sf::RenderWindow &App){
 	// declaracao de variaveis
 	sf::Event Event; // eventos de jogo
-	bool Running = true;
-	while (Running){ // loop da tela
+	bool executando = true;
+	while (executando){ // loop da tela
 		// Verificação de eventos
 		while (App.pollEvent(Event)){ // loop de eventos
 			if (Event.type == sf::Event::Closed){
@@ -131,7 +131,7 @@ int Menu::Run(sf::RenderWindow &App){
 	// não há como chegar até aqui mas, se acontecer, termine o programa.
 	return (-1);
 }
-// fim Run
+// fim Executar
 
 // Desenha
 // Método que desenha na tela alguns atributos
