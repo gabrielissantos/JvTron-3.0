@@ -37,17 +37,17 @@ Jogo::~Jogo(){
 int Jogo::Executar(sf::RenderWindow & App){
 	float altura = App.getSize().y;
 	float largura = App.getSize().x;
-	sf::RectangleShape linhaAux1;
+	sf::RectangleShape linhaAux1; // auxiliares pra posicao
 	linhaAux1.setPosition(sf::Vector2f(0, altura/2));
     linhaAux1.setFillColor(sf::Color(0,255,255));
     linhaAux1.setSize(sf::Vector2f(largura, 1.0f ));
 
-    sf::RectangleShape linhaAux2;
+    sf::RectangleShape linhaAux2; // auxiliares pra posição
 	linhaAux2.setPosition(sf::Vector2f(largura/2, 0));
     linhaAux2.setFillColor(sf::Color(0,255,255));
     linhaAux2.setSize(sf::Vector2f(1.0f, altura ));
 
-	nave->setPosicao(sf::Vector2f(largura/2,altura/2));
+	//nave->setPosicao(sf::Vector2f(largura/2,altura/2));
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
 	bool executando = true;

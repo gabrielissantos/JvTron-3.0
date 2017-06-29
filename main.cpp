@@ -41,9 +41,9 @@ int main (){
 
     // loop principal
     while (numeroTela >= 0){
+        std::cout <<"Tela: "<< numeroTela << std::endl;
         if( (numeroTela = telas[numeroTela]->Executar(App)) == 1 );// chamada do metodo que faz funcionar a tela atual
             telas[1] = new Jogo();
-        std::cout << numeroTela << std::endl;
     } // fim loop principal
 
     return EXIT_SUCCESS; // fim do programa
