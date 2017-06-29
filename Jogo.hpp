@@ -21,14 +21,14 @@ private:
 public:
 	Jogo();
 	~Jogo();
-	virtual int Executar()
+	virtual int Executar(sf::RenderWindow&);
 };
 
 Jogo::Jogo(){};
 
 Jogo::~Jogo(){};
 
-int Jogo::Executar(sf::Renderwindow & app){
+int Jogo::Executar(sf::RenderWindow & App){
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
 	bool executando = true;

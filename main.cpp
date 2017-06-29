@@ -18,7 +18,7 @@
 #include "TodasTelas.hpp"
 
 /* isso é o comando no terminal linux pra compilar o programa
-    g++ -c main.cpp && g++ main.o todasTelas.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system && ./sfml-app 
+    g++ -c main.cpp && g++ main.o TodasTelas.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system && ./sfml-app 
 */
 
 // main()
