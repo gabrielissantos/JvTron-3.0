@@ -15,20 +15,39 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Tela.hpp"
+#include "Nave.hpp"
 
 class Jogo : public Tela{
 private:
+	Nave * nave;
 public:
 	Jogo();
 	~Jogo();
 	virtual int Executar(sf::RenderWindow&);
 };
 
-Jogo::Jogo(){};
+Jogo::Jogo(){
+	nave = new Nave("inimigo.png");
+};
 
-Jogo::~Jogo(){};
+Jogo::~Jogo(){
+	delete nave;
+};
 
 int Jogo::Executar(sf::RenderWindow & App){
+	float altura = App.getSize().y;
+	float largura = App.getSize().x;
+	sf::RectangleShape linhaAux1;
+	linhaAux1.setPosition(sf::Vector2f(0, altura/2));
+    linhaAux1.setFillColor(sf::Color(0,255,255));
+    linhaAux1.setSize(sf::Vector2f(largura, 1.0f ));
+
+    sf::RectangleShape linhaAux2;
+	linhaAux2.setPosition(sf::Vector2f(largura/2, 0));
+    linhaAux2.setFillColor(sf::Color(0,255,255));
+    linhaAux2.setSize(sf::Vector2f(1.0f, altura ));
+
+	nave->setPosicao(sf::Vector2f(largura/2,altura/2));
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
 	bool executando = true;
@@ -38,6 +57,25 @@ int Jogo::Executar(sf::RenderWindow & App){
 			if (evento.type == sf::Event::Closed){
 				return (-1);
 			}
+			if (evento.type == sf::Event::KeyPressed){
+				switch(evento.key.code){
+					case sf::Keyboard::Left:
+						nave->rodaAntiHorario();
+						break;
+					case sf::Keyboard::Right:
+						nave->rodaHorario();
+						break;
+					case sf::Keyboard::End:
+						App.close();
+						return (-1);
+						break;
+				}
+			}
 		}
+		App.clear(sf::Color(32,32,32));
+		App.draw(linhaAux1);
+		App.draw(linhaAux2);
+		App.draw(nave->getSprite());
+		App.display();
 	}
 };

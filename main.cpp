@@ -28,10 +28,10 @@ int main (){
     int numeroTela = 0; // tela de inicio da aplicacao (0) é o menu
 
     // Janela do aplicativo creation
-    sf::RenderWindow App(sf::VideoMode(800, 600, 32), "JvTron", sf::Style::Titlebar | sf::Style::Close);
-
+    sf::RenderWindow App(sf::VideoMode(800, 600), "JvTron", sf::Style::Titlebar | sf::Style::Close);
+    App.setFramerateLimit(32);
     // Esconder seta do mouse
-    App.setMouseCursorVisible(false);
+    //App.setMouseCursorVisible(false);
 
     // Preparacao das tela
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y); // TELA 0: menu do jogo
@@ -43,6 +43,7 @@ int main (){
     while (numeroTela >= 0){
         if( (numeroTela = telas[numeroTela]->Executar(App)) == 1 );// chamada do metodo que faz funcionar a tela atual
             telas[1] = new Jogo();
+        std::cout << numeroTela << std::endl;
     } // fim loop principal
 
     return EXIT_SUCCESS; // fim do programa
