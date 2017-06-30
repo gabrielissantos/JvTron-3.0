@@ -31,7 +31,7 @@ int main (){
     sf::RenderWindow App(sf::VideoMode(800, 600), "JvTron", sf::Style::Titlebar | sf::Style::Close);
     App.setFramerateLimit(32);
     // Esconder seta do mouse
-    //App.setMouseCursorVisible(false);
+    App.setMouseCursorVisible(false);
 
     // Preparacao das tela
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y); // TELA 0: menu do jogo

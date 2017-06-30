@@ -6,21 +6,25 @@ using std::string;
 
 class Nave{
 	public:
-		Nave(string="");
+		Nave(string=""); // inserir nome da imagem
 		~Nave();
-		void setPosicao(const sf::Vector2f &);
-		void rodaAntiHorario();
-		void rodaHorario();
-		sf::Sprite getSprite() const;
+		void setPosicao(const sf::Vector2f &); // determina posição
+		void rodaAntiHorario(); // faz a nave rodar no sentido anti-horário
+		void rodaHorario(); // faz a nave rodar no sentido horário 
+		sf::Sprite getSprite() const; // retorna a instancia de sprite
+		sf::Vector2f getFrente() const; // retorna a frente da nave
+		sf::Vector2f getDirecao() const;
+		float getAngulo() const;
 	private:
-		float x;
-		float y;
+		float x; // posicao (horizontal)
+		float y; // posicao (vertical)
 		float anguloAtual;
-		sf::Vector2f direcao;
-		sf::Vector2f frente;
-		sf::Sprite spriteNave;
-		sf::Texture texture;
-		sf::Image imagem;
+
+		sf::Vector2f direcao; // direcao q a nave aponta
+		sf::Vector2f frente; // parte de frente da nave
+		sf::Sprite spriteNave; // instancia de sprite
+		sf::Texture texture; // instancia de textura
+		sf::Image imagem; // arquivo de iamgem
 };
 
 const float anguloRotacao = 1*3.14/18;
@@ -34,7 +38,6 @@ Nave::Nave(string s){
 	spriteNave.setTexture(texture);
 	spriteNave.setOrigin(imagem.getSize().x/2, imagem.getSize().y/2);
 	frente = sf::Vector2f(imagem.getSize().x/2, 0.0f);
-//	std::cout << anguloRotacao << std::endl;
 };
 
 Nave::~Nave(){
@@ -42,6 +45,7 @@ Nave::~Nave(){
 
 void Nave::setPosicao(const sf::Vector2f & v){
 	spriteNave.setPosition(v);
+	frente += v;
 	x = v.x;
 	y = v.y;
 };
@@ -54,19 +58,28 @@ void Nave::rodaHorario(){
 	spriteNave.rotate(10);
 	anguloAtual = anguloAtual + anguloRotacao;
 	if(anguloAtual >= 3.14*2 - anguloRotacao) anguloAtual = 0;
-	frente = sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);
-	std::cout << std::endl;
-	std::cout << anguloAtual << "rad" << std::endl;
-	std::cout << frente.x << "; " << frente.y << std::endl;
+	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);
+	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual));
+	//std::cout << "direcao: " << direcao.x << "; " << direcao.y << std::endl; 
 };
 
 void Nave::rodaAntiHorario(){
 	spriteNave.rotate(-10);
 	anguloAtual -= anguloRotacao;
 	if(anguloAtual <= -3.14*2 + anguloRotacao) anguloAtual = 0;
-	frente = sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);
-	//if(anguloAtual >= 3.14*2) anguloAtual = 0;
-	std::cout << std::endl;
-	std::cout << anguloAtual << "rad" << std::endl;
-	std::cout << frente.x << "; " << frente.y << std::endl;
+	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);
+	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual));
+	//std::cout << "direcao: " << direcao.x << "; " << direcao.y << std::endl;
+};
+
+sf::Vector2f Nave::getFrente() const{
+	return frente;
+};
+
+sf::Vector2f Nave::getDirecao() const{
+	return direcao;
+};
+
+float Nave::getAngulo() const{
+	return anguloAtual;
 };

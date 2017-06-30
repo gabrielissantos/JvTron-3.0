@@ -15,11 +15,15 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Tela.hpp"
+#include "Tiro.hpp"
 #include "Nave.hpp"
+#include "Fila.hpp"
 
 class Jogo : public Tela{
 private:
+	Fila <Tiro> tirosTron;
 	Nave * nave;
+	unsigned short int municao;
 public:
 	Jogo();
 	~Jogo();
@@ -27,6 +31,7 @@ public:
 };
 
 Jogo::Jogo(){
+	municao = 3; // numero
 	nave = new Nave("inimigo.png");
 };
 
@@ -35,19 +40,28 @@ Jogo::~Jogo(){
 };
 
 int Jogo::Executar(sf::RenderWindow & App){
+	// armazenando o tamanho atual da tela
 	float altura = App.getSize().y;
 	float largura = App.getSize().x;
-	sf::RectangleShape linhaAux1; // auxiliares pra posicao
+	bool atirou = false;
+
+	int iteradorTiros = 0;
+
+	Tiro tAux;
+	// auxiliares pra posicao
+/*	sf::RectangleShape linhaAux1;
 	linhaAux1.setPosition(sf::Vector2f(0, altura/2));
     linhaAux1.setFillColor(sf::Color(0,255,255));
     linhaAux1.setSize(sf::Vector2f(largura, 1.0f ));
 
-    sf::RectangleShape linhaAux2; // auxiliares pra posição
+    sf::RectangleShape linhaAux2;
 	linhaAux2.setPosition(sf::Vector2f(largura/2, 0));
     linhaAux2.setFillColor(sf::Color(0,255,255));
     linhaAux2.setSize(sf::Vector2f(1.0f, altura ));
-
-	//nave->setPosicao(sf::Vector2f(largura/2,altura/2));
+*/
+    // comecando no meio
+	nave->setPosicao(sf::Vector2f(largura/2,altura/2));
+	tAux.setPosition(nave->getFrente());
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
 	bool executando = true;
@@ -61,20 +75,47 @@ int Jogo::Executar(sf::RenderWindow & App){
 				switch(evento.key.code){
 					case sf::Keyboard::Left:
 						nave->rodaAntiHorario();
+						if(!atirou){
+							tAux.setDirecao(nave->getDirecao(), nave->getAngulo());
+							tAux.setPosition(nave->getFrente());
+						}
+
 						break;
 					case sf::Keyboard::Right:
 						nave->rodaHorario();
+						if(!atirou){
+							tAux.setDirecao(nave->getDirecao(), nave->getAngulo());
+							tAux.setPosition(nave->getFrente());
+						}
 						break;
 					case sf::Keyboard::End:
 						App.close();
 						return (-1);
 						break;
+					case sf::Keyboard::Space:
+						if(!atirou){
+							atirou = true;
+						}
+						//tAux->navega(10.0f);
+						break;
 				}
 			}
 		}
-		App.clear(sf::Color(32,32,32));
-		App.draw(linhaAux1);
-		App.draw(linhaAux2);
+//		std::cout << iteradorTiros << std::endl;
+		// rotina para atirar:
+		App.clear(sf::Color(32,32,32)); // limpa a tela
+		if(atirou && iteradorTiros < 400){
+			tAux.navega(10.0f);
+			App.draw(tAux.getForma());
+			iteradorTiros += 10;
+		}
+		if(iteradorTiros == 400){
+			iteradorTiros = 0;
+			tAux.paraNavegar();
+		//	std::cout << "atirou" << std::endl;
+			atirou = false;
+		}
+
 		App.draw(nave->getSprite());
 		App.display();
 	}

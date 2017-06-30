@@ -1,11 +1,11 @@
 #include <iostream>
 
-struct Node{
+struct NodePilha{
   int Info;
-  Node *Next;
+  NodePilha *Next;
 };
 
-typedef struct Node *NodePtr;
+typedef struct NodePilha *NodePilhaPtr;
 
 class Pilha
 {
@@ -18,7 +18,7 @@ class Pilha
         bool Cheia();
         int getTopo();
     private:
-        NodePtr P_Topo;
+        NodePilhaPtr P_Topo;
 };
 
 Pilha::Pilha()
@@ -37,12 +37,12 @@ Pilha::~Pilha()
 }
 
 void Pilha::Empilha(int X, bool DeuCerto){
-    NodePtr P_Aux;
+    NodePilhaPtr P_Aux;
     if(Cheia()==true)
         DeuCerto = false;
     else{
         DeuCerto = true;
-        P_Aux = new Node;
+        P_Aux = new NodePilha;
         P_Aux->Info = X;
         P_Aux->Next = P_Topo;
         P_Topo = P_Aux;
@@ -50,7 +50,7 @@ void Pilha::Empilha(int X, bool DeuCerto){
 }
 
 void Pilha::Desempilha(int X, bool DeuCerto){
-    NodePtr P_Aux;
+    NodePilhaPtr P_Aux;
     if(Vazia()==true)
         DeuCerto = false;
     else{

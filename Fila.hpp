@@ -1,51 +1,50 @@
 #include <iostream>
 
-struct Node{
-  int Info;
-  Node *Next;
+template <class Gen> struct Node{
+  Gen Info;
+  Node<Gen> *Next;
 };
 
-typedef struct Node *NodePtr;
-
+template <class Gen>
 class Fila
 {
     public:
         Fila(); //ok
         virtual ~Fila(); //ok
-        void Insere(int X, bool DeuCerto); //ok
-        void Retira(int X, bool DeuCerto);
+        void Insere(Gen X, bool DeuCerto); //ok
+        void Retira(Gen X, bool DeuCerto);
         bool Vazia(); //ok
         bool Cheia(); //ok
-        int getPrimeiro(); //ok
-        int getUltimo();   //ok
+        Gen getPrimeiro(); //ok
+        Gen getUltimo();   //ok
     private:
-        NodePtr F_Primeiro;
-        NodePtr F_Ultimo;
+        Node<Gen> * F_Primeiro;
+        Node<Gen> * F_Ultimo;
 };
-
-Fila::Fila()
+template <class Gen>
+Fila<Gen>::Fila()
 {
     F_Primeiro = NULL;
     F_Ultimo = NULL;
 }
-
-Fila::~Fila()
+template <class Gen>
+Fila<Gen>::~Fila()
 {
-    int X;
+    Gen X;
     bool DeuCerto;
     while(!Vazia()){
         DeuCerto = true;
         Retira(X, DeuCerto);
     }
 }
-
-void Fila::Insere(int X, bool DeuCerto){
-    NodePtr F_Aux;
+template <class Gen>
+void Fila<Gen>::Insere(Gen X, bool DeuCerto){
+    Node<Gen> * F_Aux;
     if(Cheia())
         DeuCerto = false;
     else{
         DeuCerto = true;
-        F_Aux = new Node;
+        F_Aux = new Node<Gen>;
         F_Aux->Info = X;
         F_Aux->Next = NULL;
         if(Vazia())
@@ -55,9 +54,9 @@ void Fila::Insere(int X, bool DeuCerto){
         F_Ultimo = F_Aux;
     }
 }
-
-void Fila::Retira(int X, bool DeuCerto){
-    NodePtr F_Aux;
+template <class Gen>
+void Fila<Gen>::Retira(Gen X, bool DeuCerto){
+    Node<Gen> * F_Aux;
     if(Vazia()==true)
         DeuCerto = false;
     else{
@@ -67,26 +66,26 @@ void Fila::Retira(int X, bool DeuCerto){
         F_Primeiro = F_Primeiro->Next;
         if(F_Primeiro == NULL)
             F_Ultimo == NULL;
-        delete(F_Aux);
+        delete(F_Aux); // por alguma razao, so funciona assim O.o
     }
 }
-
-bool Fila::Cheia(){
+template <class Gen>
+bool Fila<Gen>::Cheia(){
     return false;
 }
-
-bool Fila::Vazia(){
+template <class Gen>
+bool Fila<Gen>::Vazia(){
     if(F_Primeiro == NULL || F_Ultimo == NULL)
         return true;
     else
         return false;
 }
 
-
-int Fila::getPrimeiro(){
+template <class Gen>
+Gen Fila<Gen>::getPrimeiro(){
     return F_Primeiro->Info;
 }
-
-int Fila::getUltimo(){
+template <class Gen>
+Gen Fila<Gen>::getUltimo(){
     return F_Ultimo->Info;
 }
