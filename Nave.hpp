@@ -1,3 +1,17 @@
+/*
+	JvTron: Trabalho 3
+	Departamento de Computação
+	UFSCar Universidade Federal de São Carlos
+	Disciplina: Estrutura de Dados
+	Professor: Roberto Ferrari
+	Aluno(a):								RA:
+		João Gabriel Melo Barbirato			726546
+		Leonardo de Oliveira Peralta		726556
+		Gabrieli Santos						726523
+    
+	Controle de Versão: https://github.com/gabrielissantos/JvTron-3.0
+*/
+
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -18,7 +32,7 @@ class Nave{
 	private:
 		float x; // posicao (horizontal)
 		float y; // posicao (vertical)
-		float anguloAtual;
+		float anguloAtual; // angulo atual relativo
 
 		sf::Vector2f direcao; // direcao q a nave aponta
 		sf::Vector2f frente; // parte de frente da nave
@@ -27,7 +41,7 @@ class Nave{
 		sf::Image imagem; // arquivo de iamgem
 };
 
-const float anguloRotacao = 1*3.14/18;
+const float anguloRotacao = 1*3.14/18; // angulo de rotacao em radianos
 
 Nave::Nave(string s){
 	// importando a imagem de forma mais geral possível
@@ -55,21 +69,20 @@ sf::Sprite Nave::getSprite() const{
 };
 
 void Nave::rodaHorario(){
-	spriteNave.rotate(10);
-	anguloAtual = anguloAtual + anguloRotacao;
-	if(anguloAtual >= 3.14*2 - anguloRotacao) anguloAtual = 0;
-	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);
-	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual));
-	//std::cout << "direcao: " << direcao.x << "; " << direcao.y << std::endl; 
+	spriteNave.rotate(10); // angulo de rotação em graus (discutivel)
+	anguloAtual = anguloAtual + anguloRotacao; // acrescentando no angulo relativo atual
+	if(anguloAtual >= 3.14*2 - anguloRotacao) anguloAtual = 0; // zera após uma volta
+	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2); //apos girar, mudar a posicao da frente 
+	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual)); // apos girar, atualizar a direcao
 };
 
+// mesmo que o rodaHorario
 void Nave::rodaAntiHorario(){
 	spriteNave.rotate(-10);
 	anguloAtual -= anguloRotacao;
 	if(anguloAtual <= -3.14*2 + anguloRotacao) anguloAtual = 0;
 	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);
 	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual));
-	//std::cout << "direcao: " << direcao.x << "; " << direcao.y << std::endl;
 };
 
 sf::Vector2f Nave::getFrente() const{

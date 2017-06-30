@@ -76,15 +76,16 @@ int Jogo::Executar(sf::RenderWindow & App){
 					case sf::Keyboard::Left:
 						nave->rodaAntiHorario();
 						if(!atirou){
-							tAux.setDirecao(nave->getDirecao(), nave->getAngulo());
+							tAux.setDirecao(nave->getDirecao());
 							tAux.setPosition(nave->getFrente());
+							std::cout << "direcao: " << nave->getDirecao().x << "; " << nave->getDirecao().y << std::endl; 
 						}
 
 						break;
 					case sf::Keyboard::Right:
 						nave->rodaHorario();
 						if(!atirou){
-							tAux.setDirecao(nave->getDirecao(), nave->getAngulo());
+							tAux.setDirecao(nave->getDirecao());
 							tAux.setPosition(nave->getFrente());
 						}
 						break;
@@ -112,6 +113,8 @@ int Jogo::Executar(sf::RenderWindow & App){
 		if(iteradorTiros == 400){
 			iteradorTiros = 0;
 			tAux.paraNavegar();
+			tAux.setDirecao(nave->getDirecao());
+			tAux.setPosition(nave->getFrente());
 		//	std::cout << "atirou" << std::endl;
 			atirou = false;
 		}

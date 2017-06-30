@@ -1,25 +1,44 @@
+/*
+	JvTron: Trabalho 3
+	Departamento de Computação
+	UFSCar Universidade Federal de São Carlos
+	Disciplina: Estrutura de Dados
+	Professor: Roberto Ferrari
+	Aluno(a):								RA:
+		João Gabriel Melo Barbirato			726546
+		Leonardo de Oliveira Peralta		726556
+		Gabrieli Santos						726523
+    
+	Controle de Versão: https://github.com/gabrielissantos/JvTron-3.0
+*/
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
+
+// Estrutura do tiro
 class Tiro{
+	// atributos privados
+	private:
+		float iMovimento; // iterador pra movimento
+		sf::Vector2f posicao; // posicao do inicio do tiro
+		sf::Vector2f direcao; // para onde aponta o tiro
+		sf::CircleShape forma; // forma desenhável do tiro
+
 	public:
 		Tiro();
 		~Tiro();
-		void navega(const float & d);
+		void navega(const float & d); // faz o tiro se mover
 		void setPosition(const sf::Vector2f &);
-		void setDirecao(const sf::Vector2f &, const float &);
-		void paraNavegar();
+		void setDirecao(const sf::Vector2f &);
+		void paraNavegar(); // faz o tiro parar de se mover
 
-		sf::RectangleShape getForma() const;
-	private:
-		float iMovimento; // iterador pra movimento
-		sf::Vector2f posicao;
-		sf::Vector2f direcao;
-		sf::RectangleShape forma;
+		sf::CircleShape getForma() const;
 };
 
 Tiro::Tiro(){
 	forma.setFillColor(sf::Color(255,0,255));
-    forma.setSize(sf::Vector2f(20.0f, 1.0f ));
+	forma.setRadius(2.0f);
+	forma.setOrigin(sf::Vector2f(forma.getRadius(),forma.getRadius()));
     direcao = sf::Vector2f(1.0f, 0.0f);
 };
 
@@ -36,10 +55,8 @@ void Tiro::setPosition(const sf::Vector2f & posicao){
 	forma.setPosition(posicao);
 };
 
-void Tiro::setDirecao(const sf::Vector2f & direcao, const float & angulo){
+void Tiro::setDirecao(const sf::Vector2f & direcao){
 	this->direcao = direcao;
-	forma.rotate(angulo);
-	std::cout << angulo << std::endl;
 };
 
 void Tiro::paraNavegar(){
@@ -47,4 +64,4 @@ void Tiro::paraNavegar(){
 	iMovimento = 0;
 }
 
-sf::RectangleShape Tiro::getForma() const { return forma; };
+sf::CircleShape Tiro::getForma() const { return forma; };
