@@ -39,7 +39,7 @@ Tiro::Tiro(){
 	forma.setFillColor(sf::Color(255,0,255));
 	forma.setRadius(2.0f);
 	forma.setOrigin(sf::Vector2f(forma.getRadius(),forma.getRadius()));
-    direcao = sf::Vector2f(1.0f, 0.0f);
+    direcao = sf::Vector2f(0.0f, 0.0f);
 };
 
 Tiro::~Tiro(){};

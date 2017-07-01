@@ -76,12 +76,20 @@ int Jogo::Executar(sf::RenderWindow & App){
 			}
 			if (evento.type == sf::Event::KeyPressed){
 				switch(evento.key.code){
+					case sf::Keyboard::Up:
+						nave->andaFrente();
+						if(!atirou){
+							tAux.setDirecao(nave->getDirecao());
+							tAux.setPosition(nave->getFrente());
+						}
+						break;
 					case sf::Keyboard::Left:
 						nave->rodaAntiHorario();
 						if(!atirou){
 							tAux.setDirecao(nave->getDirecao());
 							tAux.setPosition(nave->getFrente());
-							std::cout << "direcao: " << nave->getDirecao().x << "; " << nave->getDirecao().y << std::endl; 
+
+							//std::cout << "direcao: " << nave->getDirecao().x << "; " << nave->getDirecao().y << std::endl; 
 						}
 
 						break;
@@ -99,6 +107,7 @@ int Jogo::Executar(sf::RenderWindow & App){
 					case sf::Keyboard::Space:
 						if(!atirou){
 							atirou = true;
+							tAux.setPosition(nave->getDirecao());
 						}
 						//tAux->navega(10.0f);
 						break;

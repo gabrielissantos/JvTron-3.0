@@ -24,18 +24,22 @@ class Nave{
 		~Nave();
 		void setPosicao(const sf::Vector2f &); // determina posição
 		void rodaAntiHorario(); // faz a nave rodar no sentido anti-horário
-		void rodaHorario(); // faz a nave rodar no sentido horário 
+		void rodaHorario(); // faz a nave rodar no sentido horário
+		void andaFrente(); // faz a nave andar pra frente
 		sf::Sprite getSprite() const; // retorna a instancia de sprite
 		sf::Vector2f getFrente() const; // retorna a frente da nave
 		sf::Vector2f getDirecao() const;
+		sf::Vector2f getPosicao() const; // retorna a posicao da nave
 		float getAngulo() const;
 	private:
 		float x; // posicao (horizontal)
 		float y; // posicao (vertical)
 		float anguloAtual; // angulo atual relativo
+		float posicaoAtual; //posicao atual relativa
 
 		sf::Vector2f direcao; // direcao q a nave aponta
 		sf::Vector2f frente; // parte de frente da nave
+		sf::Vector2f posicao; //posicao que a nave ocupa
 		sf::Sprite spriteNave; // instancia de sprite
 		sf::Texture texture; // instancia de textura
 		sf::Image imagem; // arquivo de iamgem
@@ -46,7 +50,7 @@ const float anguloRotacao = 1*3.14/18; // angulo de rotacao em radianos
 Nave::Nave(string s){
 	// importando a imagem de forma mais geral possível
 	anguloAtual = 0;
-	direcao = sf::Vector2f(1.0f,0.0f);
+	direcao = sf::Vector2f(0.0f,0.0f);
 	imagem.loadFromFile(s);
 	texture.loadFromImage(imagem);
 	spriteNave.setTexture(texture);
@@ -85,6 +89,10 @@ void Nave::rodaAntiHorario(){
 	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual));
 };
 
+void Nave::andaFrente(){
+	spriteNave.move(direcao);
+}
+
 sf::Vector2f Nave::getFrente() const{
 	return frente;
 };
@@ -92,6 +100,10 @@ sf::Vector2f Nave::getFrente() const{
 sf::Vector2f Nave::getDirecao() const{
 	return direcao;
 };
+
+sf::Vector2f Nave::getPosicao() const{
+	return posicao;
+}
 
 float Nave::getAngulo() const{
 	return anguloAtual;
