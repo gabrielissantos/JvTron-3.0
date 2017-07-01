@@ -53,6 +53,10 @@ int Jogo::Executar(sf::RenderWindow & App){
 	linhaAux1.setPosition(sf::Vector2f(0, altura/2));
     linhaAux1.setFillColor(sf::Color(0,255,255));
     linhaAux1.setSize(sf::Vector2f(largura, 1.0f ));
+<<<<<<< HEAD
+=======
+
+>>>>>>> ea5482e62a693241b7081c208700f798e0f6b121
     sf::RectangleShape linhaAux2;
 	linhaAux2.setPosition(sf::Vector2f(largura/2, 0));
     linhaAux2.setFillColor(sf::Color(0,255,255));

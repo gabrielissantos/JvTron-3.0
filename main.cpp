@@ -18,7 +18,7 @@
 #include "TodasTelas.hpp"
 
 /* isso é o comando no terminal linux pra compilar o programa
-    g++ -c main.cpp && g++ main.o todasTelas.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system && ./sfml-app 
+    g++ -c main.cpp && g++ main.o TodasTelas.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system && ./sfml-app 
 */
 
 // main()
@@ -28,8 +28,8 @@ int main (){
     int numeroTela = 0; // tela de inicio da aplicacao (0) é o menu
 
     // Janela do aplicativo creation
-    sf::RenderWindow App(sf::VideoMode(800, 600, 32), "JvTron", sf::Style::Titlebar | sf::Style::Close);
-
+    sf::RenderWindow App(sf::VideoMode(800, 600), "JvTron", sf::Style::Titlebar | sf::Style::Close);
+    App.setFramerateLimit(32);
     // Esconder seta do mouse
     App.setMouseCursorVisible(false);
 
@@ -41,6 +41,7 @@ int main (){
 
     // loop principal
     while (numeroTela >= 0){
+        std::cout <<"Tela: "<< numeroTela << std::endl;
         if( (numeroTela = telas[numeroTela]->Executar(App)) == 1 );// chamada do metodo que faz funcionar a tela atual
             telas[1] = new Jogo();
     } // fim loop principal
