@@ -66,7 +66,7 @@ void Fila<Gen>::Retira(Gen X, bool DeuCerto){
         F_Primeiro = F_Primeiro->Next;
         if(F_Primeiro == NULL)
             F_Ultimo == NULL;
-        delete(F_Aux); // por alguma razao, so funciona assim O.o
+        delete(F_Aux);
     }
 }
 template <class Gen>

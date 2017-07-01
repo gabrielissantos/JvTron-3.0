@@ -17,12 +17,12 @@
 #include "Tela.hpp"
 #include "Tiro.hpp"
 #include "Nave.hpp"
-#include "Fila.hpp"
+#include "Lista.hpp"
 
 class Jogo : public Tela{
 private:
-	Fila <Tiro> tirosTron;
 	Nave * nave;
+	Lista<Tiro> tiros;
 	unsigned short int municao;
 public:
 	Jogo();
@@ -45,18 +45,18 @@ int Jogo::Executar(sf::RenderWindow & App){
 	float largura = App.getSize().x;
 	bool atirou = false;
 
+	int contaTiros = 0;
 	int iteradorTiros = 0;
 
-	Tiro tAux;
+	bool deuCerto;
+	Tiro tiroTemplate;
+	Lista <Tiro> * aux = new Lista<Tiro>;
 	// auxiliares pra posicao
 /*	sf::RectangleShape linhaAux1;
 	linhaAux1.setPosition(sf::Vector2f(0, altura/2));
     linhaAux1.setFillColor(sf::Color(0,255,255));
     linhaAux1.setSize(sf::Vector2f(largura, 1.0f ));
-<<<<<<< HEAD
-=======
-
->>>>>>> ea5482e62a693241b7081c208700f798e0f6b121
+    
     sf::RectangleShape linhaAux2;
 	linhaAux2.setPosition(sf::Vector2f(largura/2, 0));
     linhaAux2.setFillColor(sf::Color(0,255,255));
@@ -64,7 +64,12 @@ int Jogo::Executar(sf::RenderWindow & App){
 */
     // comecando no meio
 	nave->setPosicao(sf::Vector2f(largura/2,altura/2));
-	tAux.setPosition(nave->getFrente());
+	tiroTemplate.setPosition(nave->getFrente());
+
+	// zerando iteradorTiros
+//	for(int i; i<municao; i++)
+//		iteradorTiros = 0;
+
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
 	bool executando = true;
@@ -86,18 +91,22 @@ int Jogo::Executar(sf::RenderWindow & App){
 					case sf::Keyboard::Left:
 						nave->rodaAntiHorario();
 						if(!atirou){
+<<<<<<< HEAD
 							tAux.setDirecao(nave->getDirecao());
 							tAux.setPosition(nave->getFrente());
 
 							//std::cout << "direcao: " << nave->getDirecao().x << "; " << nave->getDirecao().y << std::endl; 
+=======
+							tiroTemplate.setDirecao(nave->getDirecao());
+							tiroTemplate.setPosition(nave->getFrente());
+>>>>>>> 9510d34bae59c2f303e1ebd9c5ed9f347fd22757
 						}
-
 						break;
 					case sf::Keyboard::Right:
 						nave->rodaHorario();
 						if(!atirou){
-							tAux.setDirecao(nave->getDirecao());
-							tAux.setPosition(nave->getFrente());
+							tiroTemplate.setDirecao(nave->getDirecao());
+							tiroTemplate.setPosition(nave->getFrente());
 						}
 						break;
 					case sf::Keyboard::End:
@@ -105,33 +114,70 @@ int Jogo::Executar(sf::RenderWindow & App){
 						return (-1);
 						break;
 					case sf::Keyboard::Space:
+<<<<<<< HEAD
 						if(!atirou){
 							atirou = true;
 							tAux.setPosition(nave->getDirecao());
+=======
+						if(contaTiros < 3){
+							contaTiros++;
 						}
-						//tAux->navega(10.0f);
+
+						// aqui era pra setar quantos tiros estão prontos pra andar
+						if(contaTiros > 0){
+							while(tiros.getQuant()>0){ // zera a fila
+								tiros.remove(tiroTemplate, deuCerto);
+								aux->insere(tiroTemplate, deuCerto);
+							}
+							// aqui era pra setar
+							for(int i=0; i<municao; i++){
+								aux->remove(tiroTemplate, deuCerto);
+								if(tiroTemplate.getIterador()==-1 && i < contaTiros){
+									std::cout << "tadaima: "<< contaTiros << std::endl;
+									tiroTemplate.comecaMover();
+								}else tiroTemplate.paraNavegar();
+								tiros.insere(tiroTemplate, deuCerto);
+							}
+>>>>>>> 9510d34bae59c2f303e1ebd9c5ed9f347fd22757
+						}
+						//tiroTemplate->navega(10.0f);
 						break;
 				}
 			}
 		}
-//		std::cout << iteradorTiros << std::endl;
+
+
 		// rotina para atirar:
 		App.clear(sf::Color(32,32,32)); // limpa a tela
-		if(atirou && iteradorTiros < 400){
-			tAux.navega(10.0f);
-			App.draw(tAux.getForma());
-			iteradorTiros += 10;
+
+		// determinando quantos tiros vai dar.
+
+		for(int i=0; i < municao; i++){
+			tiros.remove(tiroTemplate, deuCerto);
+			if(tiroTemplate.getIterador() != -11 && tiroTemplate.getIterador() < 400){ // n sei pq mas isso funciona no -11
+				tiroTemplate.navega(10.0f);
+				//std::cout<<tiroTemplate.getIterador()<<std::endl;
+				App.draw(tiroTemplate.getForma());
+				tiros.insere(tiroTemplate, deuCerto);
+			}else if(tiroTemplate.getIterador() == 400){ // parar de andar no 400
+				std::cout << "tadaima!!" << std::endl;
+				tiroTemplate.setDirecao(nave->getDirecao());
+				tiroTemplate.setPosition(nave->getFrente());
+				tiroTemplate.paraNavegar();
+				contaTiros--;
+			}
 		}
-		if(iteradorTiros == 400){
-			iteradorTiros = 0;
-			tAux.paraNavegar();
-			tAux.setDirecao(nave->getDirecao());
-			tAux.setPosition(nave->getFrente());
-		//	std::cout << "atirou" << std::endl;
-			atirou = false;
+
+		// isso era pra exibir mesmo em que posição cada um tá
+		for(int i = 0; i < municao; i++){
+			tiros.remove(tiroTemplate, deuCerto);
+			std::cout << tiroTemplate.getIterador() << " ";
+			tiros.insere(tiroTemplate, deuCerto);
 		}
+		std::cout << contaTiros << std::endl;
 
 		App.draw(nave->getSprite());
 		App.display();
+	//	std::cout << contaTiros << std::endl;
 	}
 };
