@@ -32,8 +32,6 @@ class Nave{
 		sf::Vector2f getPosicao() const; // retorna a posicao da nave
 		float getAngulo() const;
 	private:
-		float x; // posicao (horizontal)
-		float y; // posicao (vertical)
 		float anguloAtual; // angulo atual relativo
 		float posicaoAtual; //posicao atual relativa
 
@@ -64,8 +62,7 @@ Nave::~Nave(){
 void Nave::setPosicao(const sf::Vector2f & v){
 	spriteNave.setPosition(v);
 	frente += v;
-	x = v.x;
-	y = v.y;
+	posicao = spriteNave.getPosition();
 };
 
 sf::Sprite Nave::getSprite() const{
@@ -76,8 +73,9 @@ void Nave::rodaHorario(){
 	spriteNave.rotate(10); // angulo de rotação em graus (discutivel)
 	anguloAtual = anguloAtual + anguloRotacao; // acrescentando no angulo relativo atual
 	if(anguloAtual >= 3.14*2 - anguloRotacao) anguloAtual = 0; // zera após uma volta
-	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2); //apos girar, mudar a posicao da frente 
+	frente = posicao + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2); //apos girar, mudar a posicao da frente 
 	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual)); // apos girar, atualizar a direcao
+	posicao = spriteNave.getPosition();
 };
  	
 // mesmo que o rodaHorario
@@ -85,13 +83,15 @@ void Nave::rodaAntiHorario(){
 	spriteNave.rotate(-10);
 	anguloAtual -= anguloRotacao;
 	if(anguloAtual <= -3.14*2 + anguloRotacao) anguloAtual = 0;
-	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);
+	frente = posicao + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);
 	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual));
+	posicao = spriteNave.getPosition();
 };
 
 void Nave::andaFrente(){
 	spriteNave.move(direcao);
-	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);;
+	posicao = spriteNave.getPosition();
+	frente += direcao;
 }
 
 sf::Vector2f Nave::getFrente() const{

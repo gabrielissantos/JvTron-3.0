@@ -32,7 +32,7 @@ public:
 
 Jogo::Jogo(){
 	municao = 1; // numero
-	nave = new Nave("inimigo.png");
+	nave = new Nave("heroi-nave-jogo3.png");
 };
 
 Jogo::~Jogo(){
@@ -52,20 +52,18 @@ int Jogo::Executar(sf::RenderWindow & App){
 	Tiro tAux;
 	Lista <Tiro> * aux = new Lista<Tiro>;
 	// auxiliares pra posicao
-/*	sf::RectangleShape linhaAux1;
+	sf::RectangleShape linhaAux1;
 	linhaAux1.setPosition(sf::Vector2f(0, altura/2));
     linhaAux1.setFillColor(sf::Color(0,255,255));
     linhaAux1.setSize(sf::Vector2f(largura, 1.0f ));
-<<<<<<< HEAD
-=======
->>>>>>> ea5482e62a693241b7081c208700f798e0f6b121
+
     sf::RectangleShape linhaAux2;
 	linhaAux2.setPosition(sf::Vector2f(largura/2, 0));
     linhaAux2.setFillColor(sf::Color(0,255,255));
     linhaAux2.setSize(sf::Vector2f(1.0f, altura ));
-*/
+
     // comecando no meio
-	nave->setPosicao(sf::Vector2f(largura/3,altura/3));
+	nave->setPosicao(sf::Vector2f(largura/2,altura/2));
 	tAux.setPosition(nave->getFrente());
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
@@ -136,7 +134,6 @@ int Jogo::Executar(sf::RenderWindow & App){
 		//	std::cout << "atirou" << std::endl;
 			atirou = false;
 		}
-
 		App.draw(nave->getSprite());
 		App.display();
 	}
