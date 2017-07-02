@@ -31,7 +31,7 @@ public:
 };
 
 Jogo::Jogo(){
-	municao = 3; // numero
+	municao = 1; // numero
 	nave = new Nave("inimigo.png");
 };
 
@@ -58,7 +58,6 @@ int Jogo::Executar(sf::RenderWindow & App){
     linhaAux1.setSize(sf::Vector2f(largura, 1.0f ));
 <<<<<<< HEAD
 =======
-
 >>>>>>> ea5482e62a693241b7081c208700f798e0f6b121
     sf::RectangleShape linhaAux2;
 	linhaAux2.setPosition(sf::Vector2f(largura/2, 0));
@@ -66,7 +65,7 @@ int Jogo::Executar(sf::RenderWindow & App){
     linhaAux2.setSize(sf::Vector2f(1.0f, altura ));
 */
     // comecando no meio
-	nave->setPosicao(sf::Vector2f(largura/2,altura/2));
+	nave->setPosicao(sf::Vector2f(largura/3,altura/3));
 	tAux.setPosition(nave->getFrente());
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
@@ -79,6 +78,7 @@ int Jogo::Executar(sf::RenderWindow & App){
 			}
 			if (evento.type == sf::Event::KeyPressed){
 				switch(evento.key.code){
+					//tecla de cima
 					case sf::Keyboard::Up:
 						nave->andaFrente();
 						if(!atirou){
@@ -86,6 +86,7 @@ int Jogo::Executar(sf::RenderWindow & App){
 							tAux.setDirecao(nave->getDirecao());
 						}
 						break;
+					//tecla da esquerda
 					case sf::Keyboard::Left:
 						nave->rodaAntiHorario();
 						if(!atirou){
@@ -93,8 +94,8 @@ int Jogo::Executar(sf::RenderWindow & App){
 							tAux.setPosition(nave->getFrente());
 							//std::cout << "direcao: " << nave->getDirecao().x << "; " << nave->getDirecao().y << std::endl; 
 						}
-
 						break;
+					//tecla da direita
 					case sf::Keyboard::Right:
 						nave->rodaHorario();
 						if(!atirou){
@@ -106,35 +107,12 @@ int Jogo::Executar(sf::RenderWindow & App){
 						App.close();
 						return (-1);
 						break;
-					case sf::Keyboard::Space:
+					case sf::Keyboard::D:
 						if(!atirou){
 							atirou = true;
-							tAux.setPosition(nave->getDirecao());
+							tAux.setPosition(nave->getFrente());
+							tAux.setDirecao(nave->getDirecao());
 						}
-						if(contaTiros < 3){
-							tiros.insere(tAux, deuCerto);
-							tiros.insere(tAux, deuCerto);
-							tiros.insere(tAux, deuCerto);
-							contaTiros++;
-						}
-
-						// aqui era pra setar quantos tiros estão prontos pra andar
-						if(contaTiros > 0){
-							while(tiros.getQuant()>0){ // zera a fila
-								tiros.remove(tAux, deuCerto);
-								aux->insere(tAux, deuCerto);
-							}
-							// aqui era pra setar
-							for(int i=0; i<municao; i++){
-								aux->remove(tAux, deuCerto);
-								if(tAux.getIterador()==-1 && i < contaTiros){
-									std::cout << "tadaima: "<< contaTiros << std::endl;
-									tAux.comecaMover();
-								}else tAux.paraNavegar();
-								tiros.insere(tAux, deuCerto);
-							}
-						}
-						//tAux->navega(10.0f);
 						break;
 				}
 			}
@@ -143,31 +121,21 @@ int Jogo::Executar(sf::RenderWindow & App){
 		// rotina para atirar:
 		App.clear(sf::Color(32,32,32)); // limpa a tela
 
-		// determinando quantos tiros vai dar.
-
-		for(int i=0; i < municao; i++){
-			tiros.remove(tAux, deuCerto);
-			if(tAux.getIterador() != -1 && tAux.getIterador() < 400){ // n sei pq mas isso funciona no -11
-				tAux.navega(10.0f);
-				//std::cout<<tAux.getIterador()<<std::endl;
-				App.draw(tAux.getForma());
-				tiros.insere(tAux, deuCerto);
-			}else if(tAux.getIterador() == 400){ // parar de andar no 400
-				std::cout << "tadaima!!" << std::endl;
-				tAux.setDirecao(nave->getDirecao());
-				tAux.setPosition(nave->getFrente());
-				tAux.paraNavegar();
-				contaTiros--;
-			}
+		if(atirou && iteradorTiros < 800){
+			//tAux.setDirecao(nave->getDirecao());
+			tAux.setPosition(nave->getFrente());
+			tAux.navega(10.0f);
+			App.draw(tAux.getForma());
+			iteradorTiros += 10;
 		}
-
-		// isso era pra exibir mesmo em que posição cada um tá
-		for(int i = 0; i < municao; i++){
-			tiros.remove(tAux, deuCerto);
-			//std::cout << tAux.getIterador() << " ";
-			tiros.insere(tAux, deuCerto);
+		if(iteradorTiros == 800){
+			iteradorTiros = 0;
+			tAux.paraNavegar();
+			//tAux.setDirecao(nave->getDirecao());
+			//tAux.setPosition(nave->getFrente());
+		//	std::cout << "atirou" << std::endl;
+			atirou = false;
 		}
-		//std::cout << contaTiros << std::endl;
 
 		App.draw(nave->getSprite());
 		App.display();
