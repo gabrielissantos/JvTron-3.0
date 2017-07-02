@@ -82,24 +82,17 @@ int Jogo::Executar(sf::RenderWindow & App){
 			if (evento.type == sf::Event::KeyPressed){
 				switch(evento.key.code){
 					case sf::Keyboard::Up:
-						nave->andaFrente();
+						nave->andaFrente(10.0f);
 						if(!atirou){
-							tAux.setDirecao(nave->getDirecao());
-							tAux.setPosition(nave->getFrente());
+							tiroTemplate.setDirecao(nave->getDirecao());
+							tiroTemplate.setPosition(nave->getFrente());
 						}
 						break;
 					case sf::Keyboard::Left:
 						nave->rodaAntiHorario();
 						if(!atirou){
-<<<<<<< HEAD
-							tAux.setDirecao(nave->getDirecao());
-							tAux.setPosition(nave->getFrente());
-
-							//std::cout << "direcao: " << nave->getDirecao().x << "; " << nave->getDirecao().y << std::endl; 
-=======
 							tiroTemplate.setDirecao(nave->getDirecao());
 							tiroTemplate.setPosition(nave->getFrente());
->>>>>>> 9510d34bae59c2f303e1ebd9c5ed9f347fd22757
 						}
 						break;
 					case sf::Keyboard::Right:
@@ -114,12 +107,14 @@ int Jogo::Executar(sf::RenderWindow & App){
 						return (-1);
 						break;
 					case sf::Keyboard::Space:
-<<<<<<< HEAD
 						if(!atirou){
 							atirou = true;
-							tAux.setPosition(nave->getDirecao());
-=======
+							tiroTemplate.setPosition(nave->getDirecao());
+						}
 						if(contaTiros < 3){
+							tiros.insere(tiroTemplate, deuCerto);
+							tiros.insere(tiroTemplate, deuCerto);
+							tiros.insere(tiroTemplate, deuCerto);
 							contaTiros++;
 						}
 
@@ -138,7 +133,6 @@ int Jogo::Executar(sf::RenderWindow & App){
 								}else tiroTemplate.paraNavegar();
 								tiros.insere(tiroTemplate, deuCerto);
 							}
->>>>>>> 9510d34bae59c2f303e1ebd9c5ed9f347fd22757
 						}
 						//tiroTemplate->navega(10.0f);
 						break;
@@ -154,7 +148,7 @@ int Jogo::Executar(sf::RenderWindow & App){
 
 		for(int i=0; i < municao; i++){
 			tiros.remove(tiroTemplate, deuCerto);
-			if(tiroTemplate.getIterador() != -11 && tiroTemplate.getIterador() < 400){ // n sei pq mas isso funciona no -11
+			if(tiroTemplate.getIterador() != -1 && tiroTemplate.getIterador() < 400){ // n sei pq mas isso funciona no -11
 				tiroTemplate.navega(10.0f);
 				//std::cout<<tiroTemplate.getIterador()<<std::endl;
 				App.draw(tiroTemplate.getForma());
@@ -171,10 +165,10 @@ int Jogo::Executar(sf::RenderWindow & App){
 		// isso era pra exibir mesmo em que posição cada um tá
 		for(int i = 0; i < municao; i++){
 			tiros.remove(tiroTemplate, deuCerto);
-			std::cout << tiroTemplate.getIterador() << " ";
+			//std::cout << tiroTemplate.getIterador() << " ";
 			tiros.insere(tiroTemplate, deuCerto);
 		}
-		std::cout << contaTiros << std::endl;
+		//std::cout << contaTiros << std::endl;
 
 		App.draw(nave->getSprite());
 		App.display();

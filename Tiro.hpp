@@ -42,12 +42,8 @@ Tiro::Tiro(){
 	forma.setFillColor(sf::Color(255,0,255));
 	forma.setRadius(2.0f);
 	forma.setOrigin(sf::Vector2f(forma.getRadius(),forma.getRadius()));
-<<<<<<< HEAD
-    direcao = sf::Vector2f(0.0f, 0.0f);
-=======
     direcao = sf::Vector2f(1.0f, 0.0f);
     iMovimento = -1;
->>>>>>> 9510d34bae59c2f303e1ebd9c5ed9f347fd22757
 };
 
 Tiro::~Tiro(){};

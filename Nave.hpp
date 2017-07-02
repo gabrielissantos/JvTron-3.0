@@ -25,7 +25,7 @@ class Nave{
 		void setPosicao(const sf::Vector2f &); // determina posição
 		void rodaAntiHorario(); // faz a nave rodar no sentido anti-horário
 		void rodaHorario(); // faz a nave rodar no sentido horário
-		void andaFrente(); // faz a nave andar pra frente
+		void andaFrente(const float &); // faz a nave andar pra frente
 		sf::Sprite getSprite() const; // retorna a instancia de sprite
 		sf::Vector2f getFrente() const; // retorna a frente da nave
 		sf::Vector2f getDirecao() const;
@@ -89,8 +89,11 @@ void Nave::rodaAntiHorario(){
 	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual));
 };
 
-void Nave::andaFrente(){
-	spriteNave.move(direcao);
+void Nave::andaFrente(const float & passo){
+	spriteNave.move(direcao*passo);
+	posicao = spriteNave.getPosition();
+	x = posicao.x;
+	y = posicao.y;
 }
 
 sf::Vector2f Nave::getFrente() const{
