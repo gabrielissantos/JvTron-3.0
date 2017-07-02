@@ -28,10 +28,13 @@ class Tiro{
 		Tiro();
 		~Tiro();
 		void navega(const float & d); // faz o tiro se mover
+		void comecaMover();
 		void setPosition(const sf::Vector2f &);
 		void setDirecao(const sf::Vector2f &);
 		void paraNavegar(); // faz o tiro parar de se mover
+		float getIterador() const;
 
+		sf::Vector2f getPosition() const;
 		sf::CircleShape getForma() const;
 };
 
@@ -40,6 +43,7 @@ Tiro::Tiro(){
 	forma.setRadius(2.0f);
 	forma.setOrigin(sf::Vector2f(forma.getRadius(),forma.getRadius()));
     direcao = sf::Vector2f(1.0f, 0.0f);
+    iMovimento = -1;
 };
 
 Tiro::~Tiro(){};
@@ -48,8 +52,10 @@ void Tiro::navega(const float & passo){
 	if(iMovimento != -1){
 		forma.setPosition(posicao + direcao*iMovimento);
 		iMovimento += passo;		
-}
+	}
 };
+
+void Tiro::comecaMover(){ if(iMovimento == -1) iMovimento = 0; };
 
 void Tiro::setPosition(const sf::Vector2f & posicao){
 	this->posicao = posicao;
@@ -66,3 +72,7 @@ void Tiro::paraNavegar(){
 }
 
 sf::CircleShape Tiro::getForma() const { return forma; };
+
+sf::Vector2f Tiro::getPosition() const { return posicao; };
+
+float Tiro::getIterador() const {return iMovimento;};
