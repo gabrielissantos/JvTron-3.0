@@ -50,7 +50,7 @@ const float anguloRotacao = 1*3.14/18; // angulo de rotacao em radianos
 Nave::Nave(string s){
 	// importando a imagem de forma mais geral possível
 	anguloAtual = 0;
-	direcao = sf::Vector2f(0.0f,0.0f);
+	direcao = sf::Vector2f(1.0f,0.0f);
 	imagem.loadFromFile(s);
 	texture.loadFromImage(imagem);
 	spriteNave.setTexture(texture);
@@ -79,7 +79,7 @@ void Nave::rodaHorario(){
 	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2); //apos girar, mudar a posicao da frente 
 	direcao= sf::Vector2f(cos(anguloAtual), sin(anguloAtual)); // apos girar, atualizar a direcao
 };
-
+ 	
 // mesmo que o rodaHorario
 void Nave::rodaAntiHorario(){
 	spriteNave.rotate(-10);
@@ -91,6 +91,7 @@ void Nave::rodaAntiHorario(){
 
 void Nave::andaFrente(){
 	spriteNave.move(direcao);
+	frente = sf::Vector2f(x,y) + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);;
 }
 
 sf::Vector2f Nave::getFrente() const{

@@ -88,6 +88,8 @@ Menu::~Menu(){ delete botao; }; // fim Destrutor
 int Menu::Executar(sf::RenderWindow &App){
 	// declaracao de variaveis
 	sf::Event Event; // eventos de jogo
+
+	
 	bool executando = true;
 	while (executando){ // loop da tela
 		// Verificação de eventos
