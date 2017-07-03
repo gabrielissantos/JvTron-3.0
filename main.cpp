@@ -28,7 +28,7 @@ int main (){
     int numeroTela = 0; // tela de inicio da aplicacao (0) é o menu
 
     // Janela do aplicativo creation
-    sf::RenderWindow App(sf::VideoMode(800, 600), "JvTron", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow App(sf::VideoMode(800, 600), "JvAsteroids", sf::Style::Titlebar | sf::Style::Close);
     App.setFramerateLimit(32);
     // Esconder seta do mouse
     App.setMouseCursorVisible(false);

@@ -68,7 +68,7 @@ void Tiro::setDirecao(const sf::Vector2f & direcao){
 
 void Tiro::paraNavegar(){
 	forma.setPosition(posicao);
-	iMovimento = 0;
+	iMovimento = -1;
 }
 
 sf::CircleShape Tiro::getForma() const { return forma; };

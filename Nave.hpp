@@ -22,14 +22,14 @@ class Nave{
 	public:
 		Nave(string=""); // inserir nome da imagem
 		~Nave();
-		void setPosicao(const sf::Vector2f &); // determina posição
+		void setPosition(const sf::Vector2f &); // determina posição
 		void rodaAntiHorario(); // faz a nave rodar no sentido anti-horário
 		void rodaHorario(); // faz a nave rodar no sentido horário
 		void andaFrente(); // faz a nave andar pra frente
 		sf::Sprite getSprite() const; // retorna a instancia de sprite
 		sf::Vector2f getFrente() const; // retorna a frente da nave
 		sf::Vector2f getDirecao() const;
-		sf::Vector2f getPosicao() const; // retorna a posicao da nave
+		sf::Vector2f getPosition() const; // retorna a posicao da nave
 		float getAngulo() const;
 	private:
 		float anguloAtual; // angulo atual relativo
@@ -59,7 +59,7 @@ Nave::Nave(string s){
 Nave::~Nave(){
 };
 
-void Nave::setPosicao(const sf::Vector2f & v){
+void Nave::setPosition(const sf::Vector2f & v){
 	spriteNave.setPosition(v);
 	frente += v;
 	posicao = spriteNave.getPosition();
@@ -102,7 +102,7 @@ sf::Vector2f Nave::getDirecao() const{
 	return direcao;
 };
 
-sf::Vector2f Nave::getPosicao() const{
+sf::Vector2f Nave::getPosition() const{
 	return posicao;
 }
 

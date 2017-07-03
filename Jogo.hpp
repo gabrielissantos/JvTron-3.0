@@ -46,10 +46,9 @@ int Jogo::Executar(sf::RenderWindow & App){
 	bool atirou = false;
 
 	int contaTiros = 0;
-	int iteradorTiros = 0;
 
-	bool deuCerto;
-	Tiro tAux;
+	bool deuCerto = true;
+	Tiro tAux, tiroTemplate;
 	Lista <Tiro> * aux = new Lista<Tiro>;
 	// auxiliares pra posicao
 	sf::RectangleShape linhaAux1;
@@ -63,8 +62,8 @@ int Jogo::Executar(sf::RenderWindow & App){
     linhaAux2.setSize(sf::Vector2f(1.0f, altura ));
 
     // comecando no meio
-	nave->setPosicao(sf::Vector2f(largura/2,altura/2));
-	tAux.setPosition(nave->getFrente());
+	nave->setPosition(sf::Vector2f(largura/2,altura/2));
+	tiroTemplate.setPosition(nave->getFrente());
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
 	bool executando = true;
@@ -80,16 +79,25 @@ int Jogo::Executar(sf::RenderWindow & App){
 					case sf::Keyboard::Up:
 						nave->andaFrente();
 						if(!atirou){
-							tAux.setPosition(nave->getFrente());
-							tAux.setDirecao(nave->getDirecao());
+							tiroTemplate.setPosition(nave->getFrente());
+							tiroTemplate.setDirecao(nave->getDirecao());
 						}
+						// estrutura do toroide
+						if(nave->getPosition().x > largura)
+							nave->setPosition(sf::Vector2f(0.0f,nave->getPosition().y)); // limite direito da tela
+						if(nave->getPosition().x < 0)
+							nave->setPosition(sf::Vector2f(largura,nave->getPosition().y)); // limite esquerdo da tela
+						if(nave->getPosition().y > altura)
+							nave->setPosition(sf::Vector2f(nave->getPosition().x, 0.0f)); // limite baixo da tela
+						if(nave->getPosition().y < 0)
+							nave->setPosition(sf::Vector2f(nave->getPosition().x, altura)); // limite alto da tela
 						break;
 					//tecla da esquerda
 					case sf::Keyboard::Left:
 						nave->rodaAntiHorario();
 						if(!atirou){
-							tAux.setDirecao(nave->getDirecao());
-							tAux.setPosition(nave->getFrente());
+							tiroTemplate.setDirecao(nave->getDirecao());
+							tiroTemplate.setPosition(nave->getFrente());
 							//std::cout << "direcao: " << nave->getDirecao().x << "; " << nave->getDirecao().y << std::endl; 
 						}
 						break;
@@ -97,42 +105,47 @@ int Jogo::Executar(sf::RenderWindow & App){
 					case sf::Keyboard::Right:
 						nave->rodaHorario();
 						if(!atirou){
-							tAux.setDirecao(nave->getDirecao());
-							tAux.setPosition(nave->getFrente());
+							tiroTemplate.setDirecao(nave->getDirecao());
+							tiroTemplate.setPosition(nave->getFrente());
 						}
 						break;
 					case sf::Keyboard::End:
 						App.close();
 						return (-1);
 						break;
-					case sf::Keyboard::D:
-						if(!atirou){
+					case sf::Keyboard::Space:
+						tiroTemplate.comecaMover();
+						tiroTemplate.setPosition(nave->getFrente());
+						tiroTemplate.setDirecao(nave->getDirecao());
+						if(!atirou){ // 1a vez atirando
+							while(deuCerto) tiros.remove(tAux, deuCerto);
 							atirou = true;
-							tAux.setPosition(nave->getFrente());
-							tAux.setDirecao(nave->getDirecao());
+							contaTiros = 0;
+						}
+						if(contaTiros < 3){
+							contaTiros++;
+							tiros.insere(tiroTemplate, deuCerto);
 						}
 						break;
 				}
 			}
 		}
-//		std::cout << iteradorTiros << std::endl;
 		// rotina para atirar:
 		App.clear(sf::Color(32,32,32)); // limpa a tela
-
-		if(atirou && iteradorTiros < 800){
-			//tAux.setDirecao(nave->getDirecao());
-			tAux.setPosition(nave->getFrente());
-			tAux.navega(10.0f);
-			App.draw(tAux.getForma());
-			iteradorTiros += 10;
-		}
-		if(iteradorTiros == 800){
-			iteradorTiros = 0;
-			tAux.paraNavegar();
-			//tAux.setDirecao(nave->getDirecao());
-			//tAux.setPosition(nave->getFrente());
-		//	std::cout << "atirou" << std::endl;
-			atirou = false;
+		for(int i=0; i < contaTiros; i++){
+			tiros.remove(tAux, deuCerto);
+			if(deuCerto){
+				if(atirou && tAux.getIterador() < 400){
+					tAux.setPosition(nave->getFrente());
+					tAux.navega(10.0f);
+					App.draw(tAux.getForma());
+					tiros.insere(tAux, deuCerto);
+				}else if(tAux.getIterador() == 400){
+					tAux.paraNavegar();
+					contaTiros--;
+					if(contaTiros == 0)	atirou = false;
+				}
+			}
 		}
 		App.draw(nave->getSprite());
 		App.display();
