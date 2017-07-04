@@ -1,3 +1,4 @@
+
 /*
 	JvTron: Trabalho 3
 	Departamento de Computação
@@ -45,21 +46,20 @@ int Jogo::Executar(sf::RenderWindow & App){
 	float largura = App.getSize().x;
 	bool atirou = false;
 
-	int contaTiros = 0;
-
+	int contaTiros = 0; // conta tiros do heroi
 	bool deuCerto = true;
 	Tiro tAux, tiroTemplate;
-	Lista <Tiro> * aux = new Lista<Tiro>;
-	// auxiliares pra posicao
-	sf::RectangleShape linhaAux1;
-	linhaAux1.setPosition(sf::Vector2f(0, altura/2));
-    linhaAux1.setFillColor(sf::Color(0,255,255));
-    linhaAux1.setSize(sf::Vector2f(largura, 1.0f ));
 
-    sf::RectangleShape linhaAux2;
-	linhaAux2.setPosition(sf::Vector2f(largura/2, 0));
-    linhaAux2.setFillColor(sf::Color(0,255,255));
-    linhaAux2.setSize(sf::Vector2f(1.0f, altura ));
+	// auxiliares pra posicao
+	sf::Texture inimigoTextura;
+	sf::Image inimigoImagem;
+	sf::Sprite inimigoSprite;
+	inimigoImagem.loadFromFile("inimiga-nave-jogo3.png");
+	inimigoTextura.loadFromImage(inimigoImagem);
+	inimigoSprite.setTexture(inimigoTextura);
+	inimigoSprite.setOrigin(sf::Vector2f(inimigoImagem.getSize().x/2,inimigoImagem.getSize().y/2));
+	inimigoSprite.rotate(180);
+	inimigoSprite.setPosition(sf::Vector2f(100, 60.0f));
 
     // comecando no meio
 	nave->setPosition(sf::Vector2f(largura/2,altura/2));
@@ -130,23 +130,36 @@ int Jogo::Executar(sf::RenderWindow & App){
 				}
 			}
 		}
-		// rotina para atirar:
+
 		App.clear(sf::Color(32,32,32)); // limpa a tela
+
+		// rotina para atirar:
 		for(int i=0; i < contaTiros; i++){
 			tiros.remove(tAux, deuCerto);
 			if(deuCerto){
-				if(atirou && tAux.getIterador() < 400){
-					tAux.setPosition(nave->getFrente());
-					tAux.navega(10.0f);
-					App.draw(tAux.getForma());
-					tiros.insere(tAux, deuCerto);
-				}else if(tAux.getIterador() == 400){
+				if(tAux.getForma().getGlobalBounds().intersects(inimigoSprite.getGlobalBounds())){ // quando acerta um inimigo
+					std::cout<<"tadaima"<<std::endl;
 					tAux.paraNavegar();
 					contaTiros--;
-					if(contaTiros == 0)	atirou = false;
+					if(contaTiros == 0) atirou = false;
+				}else{
+					if(atirou && tAux.getIterador() < 400){
+						tAux.setPosition(nave->getFrente());
+						tAux.navega(10.0f);
+						App.draw(tAux.getForma());
+						tiros.insere(tAux, deuCerto);
+					}else{ 
+						if(tAux.getIterador() == 400){
+							tAux.paraNavegar();
+							contaTiros--;
+							if(contaTiros == 0)	atirou = false;
+						}
+					}
 				}
 			}
 		}
+
+		App.draw(inimigoSprite);
 		App.draw(nave->getSprite());
 		App.display();
 	}
