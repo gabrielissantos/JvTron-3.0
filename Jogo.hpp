@@ -14,6 +14,7 @@
 */
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "Tela.hpp"
 #include "Tiro.hpp"
@@ -25,6 +26,7 @@ private:
 	Lista <Tiro> tiros;
 	Nave * nave;
 	unsigned short int municao;
+	sf::Music tiro;
 public:
 	Jogo();
 	~Jogo();
@@ -117,6 +119,11 @@ int Jogo::Executar(sf::RenderWindow & App){
 						tiroTemplate.comecaMover();
 						tiroTemplate.setPosition(nave->getFrente());
 						tiroTemplate.setDirecao(nave->getDirecao());
+						if(!tiro.openFromFile("laser.ogg")){
+        					std::cout << "ERROR 1" << std::endl;
+        					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
+    					}
+    					tiro.play(); //inicializa a musica
 						if(!atirou){ // 1a vez atirando
 							while(deuCerto) tiros.remove(tAux, deuCerto);
 							atirou = true;

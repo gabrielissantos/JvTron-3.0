@@ -44,7 +44,7 @@ int main (){
     //inicialização da musica
     if(!musica.openFromFile("sweet-dreams.ogg")){
         std::cout << "ERROR 1" << std::endl;
-        //return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
+        return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
     }
     musica.setLoop(true); //music e entra num loop para que a musica reinicie quando ela acabar
     musica.play(); //inicializa a musica
