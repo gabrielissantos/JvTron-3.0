@@ -33,11 +33,21 @@ int main (){
     // Esconder seta do mouse
     App.setMouseCursorVisible(false);
 
+    sf::Music musica; // declaração do objeto sonoro
+
     // Preparacao das tela
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y); // TELA 0: menu do jogo
     telas.push_back(s0);
     Jogo * s1 = new Jogo();
     telas.push_back(s1);
+
+    //inicialização da musica
+    if(!musica.openFromFile("sweet-dreams.ogg")){
+        std::cout << "ERROR 1" << std::endl;
+        //return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
+    }
+    musica.setLoop(true); //music e entra num loop para que a musica reinicie quando ela acabar
+    musica.play(); //inicializa a musica
 
     // loop principal
     while (numeroTela >= 0){
