@@ -27,6 +27,7 @@ private:
 	Nave * nave;
 	unsigned short int municao;
 	sf::Music tiro;
+	sf::Music atinge;
 public:
 	Jogo();
 	~Jogo();
@@ -147,6 +148,11 @@ int Jogo::Executar(sf::RenderWindow & App){
 				if(tAux.getForma().getGlobalBounds().intersects(inimigoSprite.getGlobalBounds())){ // quando acerta um inimigo
 					std::cout<<"tadaima"<<std::endl;
 					tAux.paraNavegar();
+					if(!atinge.openFromFile("atinge-inimigo.ogg")){
+        					std::cout << "ERROR 1" << std::endl;
+        					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
+    					}
+    				atinge.play(); //inicializa a musica
 					contaTiros--;
 					if(contaTiros == 0) atirou = false;
 				}else{
