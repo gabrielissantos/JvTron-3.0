@@ -25,8 +25,9 @@ class Nave{
 		void setPosition(const sf::Vector2f &); // determina posição
 		void rodaAntiHorario(); // faz a nave rodar no sentido anti-horário
 		void rodaHorario(); // faz a nave rodar no sentido horário
-		void andaFrente(); // faz a nave andar pra frente
+		void andaFrente(const float &); // faz a nave andar pra frente
 		float getAngulo() const;
+		float getVel() const;
 		sf::Sprite getSprite() const; // retorna a instancia de sprite
 		sf::Vector2f getFrente() const; // retorna a frente da nave
 		sf::Vector2f getDirecao() const;
@@ -35,7 +36,9 @@ class Nave{
 		float anguloAtual; // angulo atual relativo
 		float posicaoAtual; //posicao atual relativa
 		int vidas;
+		float vel; // velocidade da nave
 
+		sf::Vector2f direcaoVel;
 		sf::Vector2f direcao; // direcao q a nave aponta
 		sf::Vector2f frente; // parte de frente da nave
 		sf::Vector2f posicao; //posicao que a nave ocupa
@@ -47,6 +50,7 @@ class Nave{
 const float anguloRotacao = 1*3.14/18; // angulo de rotacao em radianos
 
 Nave::Nave(string s){
+	vel=0;
 	anguloAtual = 0;
 	direcao = sf::Vector2f(1.0f,0.0f);
 	frente = sf::Vector2f(imagem.getSize().x/2, 0.0f);
@@ -89,11 +93,13 @@ void Nave::rodaAntiHorario(){
 	posicao = spriteNave.getPosition();
 };
 
-void Nave::andaFrente(){
-	spriteNave.move(direcao);
+void Nave::andaFrente(const float & aceleracao){
+	if(vel == 0) direcaoVel = direcao;
+	vel += aceleracao;
+	spriteNave.move(vel*direcaoVel);
 	posicao = spriteNave.getPosition();
-	frente += direcao;
-}
+	frente += vel*direcaoVel;
+};
 
 sf::Vector2f Nave::getFrente() const{
 	return frente;
@@ -110,3 +116,7 @@ sf::Vector2f Nave::getPosition() const{
 float Nave::getAngulo() const{
 	return anguloAtual;
 };
+
+float Nave::getVel() const{
+	return vel;
+}

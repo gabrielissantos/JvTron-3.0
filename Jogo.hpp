@@ -1,4 +1,3 @@
-
 /*
 	JvTron: Trabalho 3
 	Departamento de Computação
@@ -33,6 +32,7 @@ private:
 	sf::Sprite background;
 	sf::Music tiro;
 	sf::Music atinge;
+	void obedecerToroide(Nave*, const float &, const float &);
 public:
 	Jogo();
 	~Jogo();
@@ -50,6 +50,9 @@ Jogo::~Jogo(){
 
 int Jogo::Executar(sf::RenderWindow & App){
 	// armazenando o tamanho atual da tela
+	float iteradorVel = 0; // auxiliar para velocidade da nave
+	bool inercia = false;
+
 	float altura = App.getSize().y;
 	float largura = App.getSize().x;
 	bool atirou = false;
@@ -70,6 +73,7 @@ int Jogo::Executar(sf::RenderWindow & App){
 	sf::Texture texturaVida[maxNumeroVidas];
 	sf::Sprite templateSpriteVida[maxNumeroVidas];
 
+	// carregando pilha de vidas
 	if(vidas.Vazia()){
 		for(int i=0; i<maxNumeroVidas; i++){
 			imagemVida[i].loadFromFile(std::to_string(i+1)+"vidas.png");
@@ -94,7 +98,6 @@ int Jogo::Executar(sf::RenderWindow & App){
     // comecando no meio
 	nave->setPosition(sf::Vector2f(largura/2,altura/2));
 	tiroTemplate.setPosition(nave->getFrente());
-
 	deuCerto = true;
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
@@ -109,20 +112,13 @@ int Jogo::Executar(sf::RenderWindow & App){
 				switch(evento.key.code){
 					//tecla de cima
 					case sf::Keyboard::Up:
-						nave->andaFrente();
+						nave->andaFrente(2); // tem q ser inteiro pq, se nao, n da pra chegar a 0 com double (wtf, neh)
 						if(!atirou){
 							tiroTemplate.setPosition(nave->getFrente());
 							tiroTemplate.setDirecao(nave->getDirecao());
 						}
 						// estrutura do toroide para a nave heroi
-						if(nave->getPosition().x > largura)
-							nave->setPosition(sf::Vector2f(0.0f,nave->getPosition().y)); // limite direito da tela
-						if(nave->getPosition().x < 0)
-							nave->setPosition(sf::Vector2f(largura,nave->getPosition().y)); // limite esquerdo da tela
-						if(nave->getPosition().y > altura)
-							nave->setPosition(sf::Vector2f(nave->getPosition().x, 0.0f)); // limite baixo da tela
-						if(nave->getPosition().y < 0)
-							nave->setPosition(sf::Vector2f(nave->getPosition().x, altura)); // limite alto da tela
+						obedecerToroide(nave, largura, altura);
 						break;
 					//tecla da esquerda
 					case sf::Keyboard::Left:
@@ -170,6 +166,13 @@ int Jogo::Executar(sf::RenderWindow & App){
 						break;
 				}
 			}
+			if(evento.type == sf::Event::KeyReleased){
+				switch(evento.key.code){
+					case sf::Keyboard::Up: // efeito de movimento do asteroids
+						inercia = true;
+						break;
+				}
+			}
 		}
 
 		App.clear(sf::Color(32,32,32)); // limpa a tela
@@ -209,7 +212,29 @@ int Jogo::Executar(sf::RenderWindow & App){
 		}else return(-1); // sem vidas, fim de jogo
 
 		App.draw(spriteInimigo);
+		// efeito do asteroids
+		if(inercia){
+			nave->andaFrente(-1);
+			if(nave->getVel()==0) inercia = false;
+			if(!atirou){
+				tiroTemplate.setPosition(nave->getFrente());
+				tiroTemplate.setDirecao(nave->getDirecao());
+			}
+			obedecerToroide(nave, largura, altura);
+		}
 		App.draw(nave->getSprite());
+		std::cout << nave->getVel() << std::endl;
 		App.display();
 	}
+};
+
+void Jogo::obedecerToroide(Nave * nave, const float & largura, const float & altura){
+	if(nave->getPosition().x > largura)
+		nave->setPosition(sf::Vector2f(0.0f,nave->getPosition().y)); // limite direito da tela
+	if(nave->getPosition().x < 0)
+		nave->setPosition(sf::Vector2f(largura,nave->getPosition().y)); // limite esquerdo da tela
+	if(nave->getPosition().y > altura)
+		nave->setPosition(sf::Vector2f(nave->getPosition().x, 0.0f)); // limite baixo da tela
+	if(nave->getPosition().y < 0)
+		nave->setPosition(sf::Vector2f(nave->getPosition().x, altura)); // limite alto da tela}
 };
