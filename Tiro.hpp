@@ -33,6 +33,7 @@ class Tiro{
 		void setDirecao(const sf::Vector2f &);
 		void paraNavegar(); // faz o tiro parar de se mover
 		float getIterador() const;
+		int numeroTiro;
 
 		sf::Vector2f getPosition() const;
 		sf::CircleShape getForma() const;

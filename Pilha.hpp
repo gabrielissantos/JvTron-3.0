@@ -1,34 +1,35 @@
 #include <iostream>
 
-struct NodePilha{
-  int Info;
-  NodePilha *Next;
+template<class Gen> struct NodePilha{
+  Gen Info;
+  struct NodePilha<Gen> *Next;
 };
 
-typedef struct NodePilha *NodePilhaPtr;
-
+template<class Gen>
 class Pilha
 {
     public:
         Pilha();
         virtual ~Pilha();
-        void Empilha(int X, bool DeuCerto);
-        void Desempilha(int X, bool DeuCerto);
+        void Empilha(const Gen & X, bool & DeuCerto);
+        void Desempilha(Gen & X, bool & DeuCerto);
         bool Vazia();
         bool Cheia();
-        int getTopo();
+        Gen getTopo();
     private:
-        NodePilhaPtr P_Topo;
+        struct NodePilha<Gen> *  P_Topo;
 };
 
-Pilha::Pilha()
+template<class Gen>
+Pilha<Gen>::Pilha()
 {
     P_Topo = NULL;
 }
 
-Pilha::~Pilha()
+template<class Gen>
+Pilha<Gen>::~Pilha()
 {
-    int X;
+    Gen X;
     bool DeuCerto;
     while(!Vazia()){
         DeuCerto = true;
@@ -36,21 +37,23 @@ Pilha::~Pilha()
     }
 }
 
-void Pilha::Empilha(int X, bool DeuCerto){
-    NodePilhaPtr P_Aux;
+template<class Gen>
+void Pilha<Gen>::Empilha(const Gen & X, bool & DeuCerto){
+    struct NodePilha<Gen> *  P_Aux;
     if(Cheia()==true)
         DeuCerto = false;
     else{
         DeuCerto = true;
-        P_Aux = new NodePilha;
+        P_Aux = new NodePilha<Gen>;
         P_Aux->Info = X;
         P_Aux->Next = P_Topo;
         P_Topo = P_Aux;
     }
 }
 
-void Pilha::Desempilha(int X, bool DeuCerto){
-    NodePilhaPtr P_Aux;
+template<class Gen>
+void Pilha<Gen>::Desempilha(Gen & X, bool & DeuCerto){
+    struct NodePilha<Gen> *  P_Aux;
     if(Vazia()==true)
         DeuCerto = false;
     else{
@@ -62,18 +65,20 @@ void Pilha::Desempilha(int X, bool DeuCerto){
     }
 }
 
-bool Pilha::Cheia(){
+template<class Gen>
+bool Pilha<Gen>::Cheia(){
     return false;
 }
 
-bool Pilha::Vazia(){
+template<class Gen>
+bool Pilha<Gen>::Vazia(){
     if(P_Topo == NULL)
         return true;
     else
         return false;
 }
 
-
-int Pilha::getTopo(){
+template <class Gen>
+Gen Pilha<Gen>::getTopo(){
     return P_Topo->Info;
 }

@@ -26,14 +26,15 @@ class Nave{
 		void rodaAntiHorario(); // faz a nave rodar no sentido anti-horário
 		void rodaHorario(); // faz a nave rodar no sentido horário
 		void andaFrente(); // faz a nave andar pra frente
+		float getAngulo() const;
 		sf::Sprite getSprite() const; // retorna a instancia de sprite
 		sf::Vector2f getFrente() const; // retorna a frente da nave
 		sf::Vector2f getDirecao() const;
 		sf::Vector2f getPosition() const; // retorna a posicao da nave
-		float getAngulo() const;
 	private:
 		float anguloAtual; // angulo atual relativo
 		float posicaoAtual; //posicao atual relativa
+		int vidas;
 
 		sf::Vector2f direcao; // direcao q a nave aponta
 		sf::Vector2f frente; // parte de frente da nave
@@ -46,14 +47,14 @@ class Nave{
 const float anguloRotacao = 1*3.14/18; // angulo de rotacao em radianos
 
 Nave::Nave(string s){
-	// importando a imagem de forma mais geral possível
 	anguloAtual = 0;
 	direcao = sf::Vector2f(1.0f,0.0f);
+	frente = sf::Vector2f(imagem.getSize().x/2, 0.0f);
+	// importando a imagem de forma mais geral possível
 	imagem.loadFromFile(s);
 	texture.loadFromImage(imagem);
 	spriteNave.setTexture(texture);
 	spriteNave.setOrigin(imagem.getSize().x/2, imagem.getSize().y/2);
-	frente = sf::Vector2f(imagem.getSize().x/2, 0.0f);
 };
 
 Nave::~Nave(){

@@ -19,12 +19,17 @@
 #include "Tiro.hpp"
 #include "Nave.hpp"
 #include "Lista.hpp"
+#include "Pilha.hpp"
+#include "Fila.hpp"
+
+const short int maxNumeroVidas = 3; // constante de maximo numero de vidas
 
 class Jogo : public Tela{
 private:
-	Lista <Tiro> tiros;
+	Fila <Tiro> tiros;
 	Nave * nave;
 	unsigned short int municao;
+	sf::Sprite background;
 public:
 	Jogo();
 	~Jogo();
@@ -46,24 +51,48 @@ int Jogo::Executar(sf::RenderWindow & App){
 	float largura = App.getSize().x;
 	bool atirou = false;
 
+	Pilha<sf::Sprite> vidas;
+	sf::Sprite auxVidas;
 	int contaTiros = 0; // conta tiros do heroi
 	bool deuCerto = true;
 	Tiro tAux, tiroTemplate;
 
+	// background
+	sf::Texture texturaBackground;
+	texturaBackground.loadFromFile("back-jogo3.jpg");
+	background.setTexture(texturaBackground);
+
+	// imagens pra vida
+	sf::Image imagemVida[maxNumeroVidas];
+	sf::Texture texturaVida[maxNumeroVidas];
+	sf::Sprite templateSpriteVida[maxNumeroVidas];
+
+	if(vidas.Vazia()){
+		for(int i=0; i<maxNumeroVidas; i++){
+			imagemVida[i].loadFromFile(std::to_string(i+1)+"vidas.png");
+			texturaVida[i].loadFromImage(imagemVida[i]);
+			templateSpriteVida[i].setTexture(texturaVida[i]);
+			templateSpriteVida[i].setPosition(sf::Vector2f(50.0f, 50.0f));
+			vidas.Empilha(templateSpriteVida[i], deuCerto);
+		}
+	}
+
 	// auxiliares pra posicao
-	sf::Texture inimigoTextura;
-	sf::Image inimigoImagem;
-	sf::Sprite inimigoSprite;
-	inimigoImagem.loadFromFile("inimiga-nave-jogo3.png");
-	inimigoTextura.loadFromImage(inimigoImagem);
-	inimigoSprite.setTexture(inimigoTextura);
-	inimigoSprite.setOrigin(sf::Vector2f(inimigoImagem.getSize().x/2,inimigoImagem.getSize().y/2));
-	inimigoSprite.rotate(180);
-	inimigoSprite.setPosition(sf::Vector2f(100, 60.0f));
+	sf::Texture texturaInimigo;
+	sf::Image imagemInimigo;
+	sf::Sprite spriteInimigo;
+	imagemInimigo.loadFromFile("inimiga-nave-jogo3.png");
+	texturaInimigo.loadFromImage(imagemInimigo);
+	spriteInimigo.setTexture(texturaInimigo);
+	spriteInimigo.setOrigin(sf::Vector2f(imagemInimigo.getSize().x/2,imagemInimigo.getSize().y/2));
+	spriteInimigo.rotate(180);
+	spriteInimigo.setPosition(sf::Vector2f(500, 60.0f));
 
     // comecando no meio
 	nave->setPosition(sf::Vector2f(largura/2,altura/2));
 	tiroTemplate.setPosition(nave->getFrente());
+
+	deuCerto = true;
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
 	bool executando = true;
@@ -82,7 +111,7 @@ int Jogo::Executar(sf::RenderWindow & App){
 							tiroTemplate.setPosition(nave->getFrente());
 							tiroTemplate.setDirecao(nave->getDirecao());
 						}
-						// estrutura do toroide
+						// estrutura do toroide para a nave heroi
 						if(nave->getPosition().x > largura)
 							nave->setPosition(sf::Vector2f(0.0f,nave->getPosition().y)); // limite direito da tela
 						if(nave->getPosition().x < 0)
@@ -118,36 +147,39 @@ int Jogo::Executar(sf::RenderWindow & App){
 						tiroTemplate.setPosition(nave->getFrente());
 						tiroTemplate.setDirecao(nave->getDirecao());
 						if(!atirou){ // 1a vez atirando
-							while(deuCerto) tiros.remove(tAux, deuCerto);
+							while(deuCerto) tiros.Retira(tAux, deuCerto);
 							atirou = true;
 							contaTiros = 0;
 						}
 						if(contaTiros < 3){
 							contaTiros++;
-							tiros.insere(tiroTemplate, deuCerto);
+							tiros.Insere(tiroTemplate, deuCerto);
 						}
+						break;
+					case sf::Keyboard::D: // teste pra perder vida
+						vidas.Desempilha(auxVidas, deuCerto);
+						std::cout<<deuCerto<<std::endl;
 						break;
 				}
 			}
 		}
 
 		App.clear(sf::Color(32,32,32)); // limpa a tela
-
+		App.draw(background);
 		// rotina para atirar:
 		for(int i=0; i < contaTiros; i++){
-			tiros.remove(tAux, deuCerto);
+			tiros.Retira(tAux, deuCerto);
 			if(deuCerto){
-				if(tAux.getForma().getGlobalBounds().intersects(inimigoSprite.getGlobalBounds())){ // quando acerta um inimigo
-					std::cout<<"tadaima"<<std::endl;
+				if(tAux.getForma().getGlobalBounds().intersects(spriteInimigo.getGlobalBounds())){ // quando acerta um inimigo
+					std::cout << "acertou" << std::endl;
 					tAux.paraNavegar();
 					contaTiros--;
 					if(contaTiros == 0) atirou = false;
 				}else{
 					if(atirou && tAux.getIterador() < 400){
-						tAux.setPosition(nave->getFrente());
 						tAux.navega(10.0f);
 						App.draw(tAux.getForma());
-						tiros.insere(tAux, deuCerto);
+						tiros.Insere(tAux, deuCerto);
 					}else{ 
 						if(tAux.getIterador() == 400){
 							tAux.paraNavegar();
@@ -159,7 +191,11 @@ int Jogo::Executar(sf::RenderWindow & App){
 			}
 		}
 
-		App.draw(inimigoSprite);
+		if(!vidas.Vazia()){
+			App.draw(vidas.getTopo());
+		}else return(-1); // sem vidas, fim de jogo
+
+		App.draw(spriteInimigo);
 		App.draw(nave->getSprite());
 		App.display();
 	}

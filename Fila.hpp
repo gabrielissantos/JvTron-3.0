@@ -1,8 +1,8 @@
 #include <iostream>
 
-template <class Gen> struct Node{
+template <class Gen> struct NodeFila{
   Gen Info;
-  Node<Gen> *Next;
+  NodeFila<Gen> *Next;
 };
 
 template <class Gen>
@@ -11,15 +11,15 @@ class Fila
     public:
         Fila(); //ok
         virtual ~Fila(); //ok
-        void Insere(Gen X, bool DeuCerto); //ok
-        void Retira(Gen X, bool DeuCerto);
+        void Insere(const Gen & X, bool & DeuCerto); //ok
+        void Retira(Gen & X, bool & DeuCerto);
         bool Vazia(); //ok
         bool Cheia(); //ok
         Gen getPrimeiro(); //ok
         Gen getUltimo();   //ok
     private:
-        Node<Gen> * F_Primeiro;
-        Node<Gen> * F_Ultimo;
+        NodeFila<Gen> * F_Primeiro;
+        NodeFila<Gen> * F_Ultimo;
 };
 template <class Gen>
 Fila<Gen>::Fila()
@@ -38,13 +38,13 @@ Fila<Gen>::~Fila()
     }
 }
 template <class Gen>
-void Fila<Gen>::Insere(Gen X, bool DeuCerto){
-    Node<Gen> * F_Aux;
+void Fila<Gen>::Insere(const Gen & X, bool & DeuCerto){
+    NodeFila<Gen> * F_Aux;
     if(Cheia())
         DeuCerto = false;
     else{
         DeuCerto = true;
-        F_Aux = new Node<Gen>;
+        F_Aux = new NodeFila<Gen>;
         F_Aux->Info = X;
         F_Aux->Next = NULL;
         if(Vazia())
@@ -55,8 +55,8 @@ void Fila<Gen>::Insere(Gen X, bool DeuCerto){
     }
 }
 template <class Gen>
-void Fila<Gen>::Retira(Gen X, bool DeuCerto){
-    Node<Gen> * F_Aux;
+void Fila<Gen>::Retira(Gen & X, bool & DeuCerto){
+    NodeFila<Gen> * F_Aux;
     if(Vazia()==true)
         DeuCerto = false;
     else{
