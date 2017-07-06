@@ -14,6 +14,7 @@
 */
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "Tela.hpp"
 #include "Tiro.hpp"
@@ -30,6 +31,8 @@ private:
 	Nave * nave;
 	unsigned short int municao;
 	sf::Sprite background;
+	sf::Music tiro;
+	sf::Music atinge;
 public:
 	Jogo();
 	~Jogo();
@@ -146,6 +149,11 @@ int Jogo::Executar(sf::RenderWindow & App){
 						tiroTemplate.comecaMover();
 						tiroTemplate.setPosition(nave->getFrente());
 						tiroTemplate.setDirecao(nave->getDirecao());
+						if(!tiro.openFromFile("laser.ogg")){
+        					std::cout << "ERROR 1" << std::endl;
+        					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
+    					}
+    					tiro.play(); //inicializa a musica
 						if(!atirou){ // 1a vez atirando
 							while(deuCerto) tiros.Retira(tAux, deuCerto);
 							atirou = true;
@@ -173,6 +181,11 @@ int Jogo::Executar(sf::RenderWindow & App){
 				if(tAux.getForma().getGlobalBounds().intersects(spriteInimigo.getGlobalBounds())){ // quando acerta um inimigo
 					std::cout << "acertou" << std::endl;
 					tAux.paraNavegar();
+					if(!atinge.openFromFile("atinge-inimigo.ogg")){
+        					std::cout << "ERROR 1" << std::endl;
+        					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
+    					}
+    				atinge.play(); //inicializa a musica
 					contaTiros--;
 					if(contaTiros == 0) atirou = false;
 				}else{
