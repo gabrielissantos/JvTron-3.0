@@ -15,8 +15,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
+#include <string>
 #include "TodasTelas.hpp"
-
 /* isso é o comando no terminal linux pra compilar o programa
     g++ -c main.cpp && g++ main.o TodasTelas.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system && ./sfml-app 
 */
@@ -26,7 +26,6 @@
 int main (){
     std::vector<Tela*> telas; // vetor que conterá as telas
     int numeroTela = 0; // tela de inicio da aplicacao (0) é o menu
-  
     
     // Janela do aplicativo creation
     sf::RenderWindow App(sf::VideoMode(800, 600), "JvAsteroids", sf::Style::Titlebar | sf::Style::Close);
@@ -41,6 +40,8 @@ int main (){
     telas.push_back(s0);
     Jogo * s1 = new Jogo();
     telas.push_back(s1);
+    Ranking * s3 = new Ranking(App.getSize().x, App.getSize().y);
+    telas.push_back(s3);
 
     //inicialização da musica
     if(!musica.openFromFile("sweet-dreams.ogg")){
@@ -52,9 +53,17 @@ int main (){
 
     // loop principal
     while (numeroTela >= 0){
-        std::cout <<"Tela: "<< numeroTela << std::endl;
-        if( (numeroTela = telas[numeroTela]->Executar(App)) == 1 );// chamada do metodo que faz funcionar a tela atual
+       // std::cout <<"Tela: "<< numeroTela << std::endl;
+        if(numeroTela == 2 ){
+                s3->score = s1->score;
+        }
+        if( (numeroTela = telas[numeroTela]->Executar(App)) == 1 ){// chamada do metodo que faz funcionar a tela atual
             telas[1] = new Jogo();
+            if(numeroTela == 2 ){
+                s3->score = s1->score;
+            }
+        }
+        
     } // fim loop principal
 
     return EXIT_SUCCESS; // fim do programa

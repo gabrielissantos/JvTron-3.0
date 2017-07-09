@@ -22,4 +22,5 @@
 // Incluir todas as telas
 #include "Menu.hpp"
 #include "Jogo.hpp"
+#include "Ranking.hpp"
 #endif // fim da inclusão

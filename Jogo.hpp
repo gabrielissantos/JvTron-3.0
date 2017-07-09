@@ -41,11 +41,11 @@ private:
 	sf::Music atinge;
     sf::Font fonte;
     sf::Text scoreText;
-    int score;
     NaveInimigo naveInimigo;
 	void obedecerToroide(Nave*, const float &, const float &);
 public:
 	Jogo();
+    int score;
 	~Jogo();
     void gerarInimigos();
 	virtual int Executar(sf::RenderWindow&);
@@ -81,7 +81,7 @@ void Jogo::gerarInimigos(){
         for(i =0 ; i<4;i++){
             naveInimigo.setId(quantInimigo);
             quantInimigo++;
-            naveInimigo.setPosition(sf::Vector2f(rand() %  500 + 100 , rand() %  300 + 100 ));
+            naveInimigo.setPosition(sf::Vector2f(rand() %  600 + 100 , rand() %  400 + 100 ));
             navesInimigas.insere(naveInimigo,deuCerto);
         }
     }
@@ -102,6 +102,7 @@ int Jogo::Executar(sf::RenderWindow & App){
 	bool deuCerto = true;
 	Tiro  tiroTemplate;
     bool adicionarTiro =false;
+    Tiro tiroAuxSpace;
     tiros.cria();
     tirosInimigo.cria();
 	// background
@@ -143,62 +144,37 @@ int Jogo::Executar(sf::RenderWindow & App){
 			if (evento.type == sf::Event::Closed){
 				return (-1);
 			}
-			if (evento.type == sf::Event::KeyPressed){
-				switch(evento.key.code){
-					//tecla de cima
-					case sf::Keyboard::Up:
-						nave->andaFrente(2); // tem q ser inteiro pq, se nao, n da pra chegar a 0 com double (wtf, neh)
-						if(!atirou){
-							tiroTemplate.setPosition(nave->getFrente());
-							tiroTemplate.setDirecao(nave->getDirecao());
-						}
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+                nave->andaFrente(2); // tem q ser inteiro pq, se nao, n da pra chegar a 0 com double (wtf, neh)
+                if(!atirou){
+                    tiroAuxSpace.setPosition(nave->getFrente());
+                    tiroAuxSpace.setDirecao(nave->getDirecao());
+				}
 						// estrutura do toroide para a nave heroi
-						obedecerToroide(nave, largura, altura);
-						break;
-					//tecla da esquerda
-					case sf::Keyboard::Left:
+                obedecerToroide(nave, largura, altura);
+            }else{
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+					
 						nave->rodaAntiHorario();
 						if(!atirou){
-							tiroTemplate.setDirecao(nave->getDirecao());
-							tiroTemplate.setPosition(nave->getFrente());
+							tiroAuxSpace.setPosition(nave->getFrente());
+                            tiroAuxSpace.setDirecao(nave->getDirecao());
 							//std::cout << "direcao: " << nave->getDirecao().x << "; " << nave->getDirecao().y << std::endl; 
 						}
-						break;
-					//tecla da direita
-					case sf::Keyboard::Right:
+                }else{
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){ 
 						nave->rodaHorario();
 						if(!atirou){
-							tiroTemplate.setDirecao(nave->getDirecao());
-							tiroTemplate.setPosition(nave->getFrente());
+							tiroAuxSpace.setPosition(nave->getFrente());
+                            tiroAuxSpace.setDirecao(nave->getDirecao());
 						}
-						break;
-					case sf::Keyboard::End:
-						App.close();
-						return (-1);
-						break;
-					case sf::Keyboard::Space:
-                        adicionarTiro = true;
-// 						if(!tiro.openFromFile("laser.ogg")){
-//         					std::cout << "ERROR 1" << std::endl;
-//         					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
-//     					}
-//     					tiro.play(); //inicializa a musica
-// 						if(!atirou){ // 1a vez atirando
-// 							while(deuCerto) tiros.Retira(tAux, deuCerto);
-// 							atirou = true;
-// 							contaTiros = 0;
-// 						}
-// 						if(contaTiros < 3){
-// 							contaTiros++;
-//                             tiros.Insere(tiroTemplate, deuCerto);
-// 							tiros.Insere(tiroTemplate, deuCerto);
-// 						}
-// 						
-                        break;
-					case sf::Keyboard::D: // teste pra perder vida
-						//vidas.Desempilha(auxVidas, deuCerto);
-						std::cout<<deuCerto<<std::endl;
-						break;
+                    }else{
+                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z)){
+                            adicionarTiro = true;
+                            tiroAuxSpace.setPosition(nave->getFrente());
+                            tiroAuxSpace.setDirecao(nave->getDirecao());
+                        }
+                    }
 				}
 			}
 			if(evento.type == sf::Event::KeyReleased){
@@ -209,33 +185,33 @@ int Jogo::Executar(sf::RenderWindow & App){
 				}
 			}
 		}
-        if(adicionarTiro){
-            Tiro tiroAuxSpace;
-            tiroAuxSpace.setId(quantTirosHeroi);
-            quantTirosHeroi++;
-            tiroAuxSpace.comecaMover();
-            tiroAuxSpace.setPosition(nave->getFrente());
-            tiroAuxSpace.setDirecao(nave->getDirecao());
-            tiros.insere(tiroAuxSpace, deuCerto);
-            adicionarTiro = false;
-        }
 		App.clear(sf::Color(32,32,32)); // limpa a tela
 		App.draw(background);
 
 		if(!vidas.Vazia()){
 			App.draw(vidas.getTopo());
-		}else return(-1); // sem vidas, fim de jogo
-
+		}else{ 
+            return(2); // sem vidas, fim de jogo
+        }
 		// efeito do asteroids
 		if(inercia){
 			nave->andaFrente(-1);
 			if(nave->getVel()==0) inercia = false;
-			if(!atirou){
-				tiroTemplate.setPosition(nave->getFrente());
-				tiroTemplate.setDirecao(nave->getDirecao());
-			}
+            
 			obedecerToroide(nave, largura, altura);
+			
+				tiroAuxSpace.setPosition(nave->getFrente());
+                tiroAuxSpace.setDirecao(nave->getDirecao());
+			
 		}
+        if(adicionarTiro){
+            printf("Ta indoooooo");
+            tiroAuxSpace.setId(quantTirosHeroi);
+            quantTirosHeroi++;
+            tiroAuxSpace.comecaMover();
+            tiros.insere(tiroAuxSpace, deuCerto);
+            adicionarTiro = false;
+        }
         Tiro auxTiroInimigo;
         tirosInimigo.PegaOPrimeiro(auxTiroInimigo,deuCerto);
          while(deuCerto){
@@ -315,6 +291,8 @@ void Jogo::obedecerToroide(Nave * nave, const float & largura, const float & alt
 		nave->setPosition(sf::Vector2f(nave->getPosition().x, 0.0f)); // limite baixo da tela
 	if(nave->getPosition().y < 0)
 		nave->setPosition(sf::Vector2f(nave->getPosition().x, altura)); // limite alto da tela}
+        
+    nave->resetFrente();
 };
 // 		// rotina para atirar:
 // 		for(int i=0; i < contaTiros; i++){
@@ -345,4 +323,19 @@ void Jogo::obedecerToroide(Nave * nave, const float & largura, const float & alt
 // 				}
 // 			}
 // 		}
-
+// 						if(!tiro.openFromFile("laser.ogg")){
+//         					std::cout << "ERROR 1" << std::endl;
+//         					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
+//     					}
+//     					tiro.play(); //inicializa a musica
+// 						if(!atirou){ // 1a vez atirando
+// 							while(deuCerto) tiros.Retira(tAux, deuCerto);
+// 							atirou = true;
+// 							contaTiros = 0;
+// 						}
+// 						if(contaTiros < 3){
+// 							contaTiros++;
+//                             tiros.Insere(tiroTemplate, deuCerto);
+// 							tiros.Insere(tiroTemplate, deuCerto);
+// 						}
+// 						

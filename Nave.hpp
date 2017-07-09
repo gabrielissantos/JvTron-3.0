@@ -32,6 +32,7 @@ class Nave{
 		sf::Vector2f getFrente() const; // retorna a frente da nave
 		sf::Vector2f getDirecao() const;
 		sf::Vector2f getPosition() const; // retorna a posicao da nave
+		void resetFrente();
 	private:
 		float anguloAtual; // angulo atual relativo
 		float posicaoAtual; //posicao atual relativa
@@ -71,6 +72,9 @@ void Nave::setPosition(const sf::Vector2f & v){
 	posicao = spriteNave.getPosition();
 };
 
+void Nave::resetFrente(){
+	frente = posicao + sf::Vector2f(cos(anguloAtual)*imagem.getSize().x/2, sin(anguloAtual)*imagem.getSize().x/2);
+};
 sf::Sprite Nave::getSprite() const{
 	return spriteNave;
 };

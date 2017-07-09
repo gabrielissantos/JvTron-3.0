@@ -1,21 +1,23 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <curl/curl.h>
-#include <string>
+
 class Request{
     public:
-        void enviarRanking(std::string,std::string);
+        void enviarRanking(std::string&,std::string&);
 
 
-}
-void Request::enviarRanking(std::string nome , std::string score){
+};
+void Request::enviarRanking(std::string &nome , std::string &score){
     CURL *curl;
   CURLcode res;
- 
+  std::string url = "http://linux1001.pythonanywhere.com/api/JvTron3/Jogo/Ranking/"+nome+"/"+score+"";
   curl_global_init(CURL_GLOBAL_DEFAULT);
  
   curl = curl_easy_init();
   if(curl) {
-    curl_easy_setopt(curl, CURLOPT_URL, "http://linux1001.pythonanywhere.com/api/JvTron3/Jogo/Ranking/"+nome+"/"+score+"");
+    curl_easy_setopt(curl, CURLOPT_URL,url.c_str());
  
 #ifdef SKIP_PEER_VERIFICATION
     /*
@@ -28,7 +30,7 @@ void Request::enviarRanking(std::string nome , std::string score){
      * default bundle, then the CURLOPT_CAPATH option might come handy for
      * you.
      */ 
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 10L);
 #endif
  
 #ifdef SKIP_HOSTNAME_VERIFICATION
@@ -38,7 +40,7 @@ void Request::enviarRanking(std::string nome , std::string score){
      * subjectAltName) fields, libcurl will refuse to connect. You can skip
      * this check, but this will make the connection less secure.
      */ 
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 10L);
 #endif
  
     /* Perform the request, res will get the return code */ 
@@ -47,9 +49,9 @@ void Request::enviarRanking(std::string nome , std::string score){
     if(res != CURLE_OK)
       fprintf(stderr, "curl_easy_perform() failed: %s\n",
               curl_easy_strerror(res));
- 
     /* always cleanup */ 
-    curl_easy_cleanup(curl);
+
+   // curl_easy_cleanup(curl);
   }
  
   curl_global_cleanup();
