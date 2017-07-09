@@ -26,7 +26,8 @@
 int main (){
     std::vector<Tela*> telas; // vetor que conterá as telas
     int numeroTela = 0; // tela de inicio da aplicacao (0) é o menu
-
+  
+    
     // Janela do aplicativo creation
     sf::RenderWindow App(sf::VideoMode(800, 600), "JvAsteroids", sf::Style::Titlebar | sf::Style::Close);
     App.setFramerateLimit(32);

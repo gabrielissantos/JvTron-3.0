@@ -64,6 +64,7 @@ Nave::Nave(string s){
 Nave::~Nave(){
 };
 
+
 void Nave::setPosition(const sf::Vector2f & v){
 	spriteNave.setPosition(v);
 	frente += v;

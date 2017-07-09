@@ -18,6 +18,7 @@
 #include "Tela.hpp"
 #include "Tiro.hpp"
 #include "Nave.hpp"
+#include "NaveInimigo.hpp"
 #include "Lista.hpp"
 #include "Pilha.hpp"
 #include "Fila.hpp"
@@ -26,33 +27,71 @@ const short int maxNumeroVidas = 3; // constante de maximo numero de vidas
 
 class Jogo : public Tela{
 private:
-	Fila <Tiro> tiros;
+	Lista <Tiro> tiros;
+    Lista <Tiro> tirosInimigo;
+    Lista <NaveInimigo> navesInimigas;
+    sf::RectangleShape a;
 	Nave * nave;
 	unsigned short int municao;
 	sf::Sprite background;
+    int quantTirosHeroi;
+    int quantTirosInimigo;
+    int quantInimigo;
 	sf::Music tiro;
 	sf::Music atinge;
+    sf::Font fonte;
+    sf::Text scoreText;
+    int score;
+    NaveInimigo naveInimigo;
 	void obedecerToroide(Nave*, const float &, const float &);
 public:
 	Jogo();
 	~Jogo();
+    void gerarInimigos();
 	virtual int Executar(sf::RenderWindow&);
 };
 
 Jogo::Jogo(){
 	municao = 1; // numero
+	quantInimigo=0;
 	nave = new Nave("heroi-nave-jogo3.png");
+    
+    navesInimigas.cria();
+    
+    naveInimigo.criarNave();
+    score=0;
+    naveInimigo.texture.loadFromFile("inimiga-nave-jogo3.png");
+    naveInimigo.spriteNave.setTexture(naveInimigo.texture);
+    
+    fonte.loadFromFile("Tr2n.ttf");
+    scoreText.setCharacterSize(30);
+	scoreText.setFont(fonte);
+	scoreText.setColor(sf::Color(255,255,255));
 };
 
 Jogo::~Jogo(){
 	delete nave;
 };
-
+void Jogo::gerarInimigos(){
+    bool deuCerto;
+    int i;
+    
+    if(navesInimigas.getQuant()  == 0 ){
+        
+        for(i =0 ; i<4;i++){
+            naveInimigo.setId(quantInimigo);
+            quantInimigo++;
+            naveInimigo.setPosition(sf::Vector2f(rand() %  500 + 100 , rand() %  300 + 100 ));
+            navesInimigas.insere(naveInimigo,deuCerto);
+        }
+    }
+};
 int Jogo::Executar(sf::RenderWindow & App){
 	// armazenando o tamanho atual da tela
 	float iteradorVel = 0; // auxiliar para velocidade da nave
 	bool inercia = false;
-
+    quantTirosHeroi = 0;
+    quantTirosInimigo =0;
 	float altura = App.getSize().y;
 	float largura = App.getSize().x;
 	bool atirou = false;
@@ -61,8 +100,10 @@ int Jogo::Executar(sf::RenderWindow & App){
 	sf::Sprite auxVidas;
 	int contaTiros = 0; // conta tiros do heroi
 	bool deuCerto = true;
-	Tiro tAux, tiroTemplate;
-
+	Tiro  tiroTemplate;
+    bool adicionarTiro =false;
+    tiros.cria();
+    tirosInimigo.cria();
 	// background
 	sf::Texture texturaBackground;
 	texturaBackground.loadFromFile("back-jogo3.jpg");
@@ -79,21 +120,15 @@ int Jogo::Executar(sf::RenderWindow & App){
 			imagemVida[i].loadFromFile(std::to_string(i+1)+"vidas.png");
 			texturaVida[i].loadFromImage(imagemVida[i]);
 			templateSpriteVida[i].setTexture(texturaVida[i]);
-			templateSpriteVida[i].setPosition(sf::Vector2f(50.0f, 50.0f));
+            templateSpriteVida[i].setScale(sf::Vector2f(templateSpriteVida[i].getScale().x/1.3,templateSpriteVida[i].getScale().y/1.3));
+			templateSpriteVida[i].setPosition(sf::Vector2f(10.0f, 590.0f - texturaVida[i].getSize().y ));
 			vidas.Empilha(templateSpriteVida[i], deuCerto);
 		}
 	}
-
 	// auxiliares pra posicao
 	sf::Texture texturaInimigo;
-	sf::Image imagemInimigo;
-	sf::Sprite spriteInimigo;
-	imagemInimigo.loadFromFile("inimiga-nave-jogo3.png");
-	texturaInimigo.loadFromImage(imagemInimigo);
-	spriteInimigo.setTexture(texturaInimigo);
-	spriteInimigo.setOrigin(sf::Vector2f(imagemInimigo.getSize().x/2,imagemInimigo.getSize().y/2));
-	spriteInimigo.rotate(180);
-	spriteInimigo.setPosition(sf::Vector2f(500, 60.0f));
+    sf::RectangleShape olha;
+    
 
     // comecando no meio
 	nave->setPosition(sf::Vector2f(largura/2,altura/2));
@@ -142,26 +177,26 @@ int Jogo::Executar(sf::RenderWindow & App){
 						return (-1);
 						break;
 					case sf::Keyboard::Space:
-						tiroTemplate.comecaMover();
-						tiroTemplate.setPosition(nave->getFrente());
-						tiroTemplate.setDirecao(nave->getDirecao());
-						if(!tiro.openFromFile("laser.ogg")){
-        					std::cout << "ERROR 1" << std::endl;
-        					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
-    					}
-    					tiro.play(); //inicializa a musica
-						if(!atirou){ // 1a vez atirando
-							while(deuCerto) tiros.Retira(tAux, deuCerto);
-							atirou = true;
-							contaTiros = 0;
-						}
-						if(contaTiros < 3){
-							contaTiros++;
-							tiros.Insere(tiroTemplate, deuCerto);
-						}
-						break;
+                        adicionarTiro = true;
+// 						if(!tiro.openFromFile("laser.ogg")){
+//         					std::cout << "ERROR 1" << std::endl;
+//         					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
+//     					}
+//     					tiro.play(); //inicializa a musica
+// 						if(!atirou){ // 1a vez atirando
+// 							while(deuCerto) tiros.Retira(tAux, deuCerto);
+// 							atirou = true;
+// 							contaTiros = 0;
+// 						}
+// 						if(contaTiros < 3){
+// 							contaTiros++;
+//                             tiros.Insere(tiroTemplate, deuCerto);
+// 							tiros.Insere(tiroTemplate, deuCerto);
+// 						}
+// 						
+                        break;
 					case sf::Keyboard::D: // teste pra perder vida
-						vidas.Desempilha(auxVidas, deuCerto);
+						//vidas.Desempilha(auxVidas, deuCerto);
 						std::cout<<deuCerto<<std::endl;
 						break;
 				}
@@ -174,44 +209,23 @@ int Jogo::Executar(sf::RenderWindow & App){
 				}
 			}
 		}
-
+        if(adicionarTiro){
+            Tiro tiroAuxSpace;
+            tiroAuxSpace.setId(quantTirosHeroi);
+            quantTirosHeroi++;
+            tiroAuxSpace.comecaMover();
+            tiroAuxSpace.setPosition(nave->getFrente());
+            tiroAuxSpace.setDirecao(nave->getDirecao());
+            tiros.insere(tiroAuxSpace, deuCerto);
+            adicionarTiro = false;
+        }
 		App.clear(sf::Color(32,32,32)); // limpa a tela
 		App.draw(background);
-		// rotina para atirar:
-		for(int i=0; i < contaTiros; i++){
-			tiros.Retira(tAux, deuCerto);
-			if(deuCerto){
-				if(tAux.getForma().getGlobalBounds().intersects(spriteInimigo.getGlobalBounds())){ // quando acerta um inimigo
-					std::cout << "acertou" << std::endl;
-					tAux.paraNavegar();
-					if(!atinge.openFromFile("atinge-inimigo.ogg")){
-        					std::cout << "ERROR 1" << std::endl;
-        					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
-    					}
-    				atinge.play(); //inicializa a musica
-					contaTiros--;
-					if(contaTiros == 0) atirou = false;
-				}else{
-					if(atirou && tAux.getIterador() < 400){
-						tAux.navega(10.0f);
-						App.draw(tAux.getForma());
-						tiros.Insere(tAux, deuCerto);
-					}else{ 
-						if(tAux.getIterador() == 400){
-							tAux.paraNavegar();
-							contaTiros--;
-							if(contaTiros == 0)	atirou = false;
-						}
-					}
-				}
-			}
-		}
 
 		if(!vidas.Vazia()){
 			App.draw(vidas.getTopo());
 		}else return(-1); // sem vidas, fim de jogo
 
-		App.draw(spriteInimigo);
 		// efeito do asteroids
 		if(inercia){
 			nave->andaFrente(-1);
@@ -222,9 +236,73 @@ int Jogo::Executar(sf::RenderWindow & App){
 			}
 			obedecerToroide(nave, largura, altura);
 		}
-		App.draw(nave->getSprite());
+        Tiro auxTiroInimigo;
+        tirosInimigo.PegaOPrimeiro(auxTiroInimigo,deuCerto);
+         while(deuCerto){
+            App.draw(auxTiroInimigo.getForma());
+            if(auxTiroInimigo.getForma().getGlobalBounds().intersects(nave->getSprite().getGlobalBounds())){
+                tirosInimigo.removeP(auxTiroInimigo,deuCerto);
+                vidas.Desempilha(auxVidas, deuCerto);
+            }else{
+                auxTiroInimigo.navega(0.03f);
+                tirosInimigo.atualizaP(auxTiroInimigo,deuCerto);
+            }
+            tirosInimigo.PegaOProximo(auxTiroInimigo,deuCerto);
+        }
+        NaveInimigo auxNaveInimiga;
+        auxNaveInimiga.criarNave();
+        navesInimigas.PegaOPrimeiro(auxNaveInimiga,deuCerto);
+        bool morreu=false;
+        int movimentaTiros = 0;
+        while(deuCerto){
+            App.draw(auxNaveInimiga.spriteNave);
+            Tiro auxTiro;
+            tiros.PegaOPrimeiro(auxTiro,deuCerto);
+            while(deuCerto){
+                App.draw(auxTiro.getForma());
+            
+                if(auxTiro.getForma().getGlobalBounds().intersects(auxNaveInimiga.getSprite().getGlobalBounds())){
+                    tiros.removeP(auxTiro,deuCerto);
+                    score+=10;
+                    navesInimigas.removeP(auxNaveInimiga,deuCerto);
+                    morreu=true;
+                }else{
+                    if(movimentaTiros == 0){
+                        auxTiro.navega(10.0f);
+                        tiros.atualizaP(auxTiro,deuCerto);
+                        movimentaTiros;
+                    }
+                }
+                tiros.PegaOProximo(auxTiro,deuCerto);
+            }
+            movimentaTiros++;
+            if(!morreu){
+                auxNaveInimiga.visao(nave->getSprite());
+                if(auxNaveInimiga.getAtirou()){
+                    Tiro tiroAuxInimigo;
+                    tiroAuxInimigo.setId(quantTirosInimigo);
+                    quantTirosInimigo++;
+                    tiroAuxInimigo.comecaMover();
+                    tiroAuxInimigo.setPosition(auxNaveInimiga.getLocalTiro());
+                    tiroAuxInimigo.setDirecao( nave->getSprite().getPosition() - auxNaveInimiga.getSprite().getPosition());
+                    tirosInimigo.insere(tiroAuxInimigo, deuCerto);
+                    auxNaveInimiga.resetAtirou();
+                }
+                navesInimigas.atualizaP(auxNaveInimiga,deuCerto);
+                morreu = false;
+            }
+            navesInimigas.PegaOProximo(auxNaveInimiga,deuCerto);
+        }
+        App.draw(nave->getSprite());
+        
 		std::cout << nave->getVel() << std::endl;
+        std::string strgScore= std::to_string(score);
+        scoreText.setString("Score : " +  strgScore);
+        scoreText.setPosition(sf::Vector2f(700 - scoreText.getCharacterSize()*3.5, 550.f));
+        App.draw(scoreText);
 		App.display();
+        
+        gerarInimigos();
 	}
 };
 
@@ -238,3 +316,33 @@ void Jogo::obedecerToroide(Nave * nave, const float & largura, const float & alt
 	if(nave->getPosition().y < 0)
 		nave->setPosition(sf::Vector2f(nave->getPosition().x, altura)); // limite alto da tela}
 };
+// 		// rotina para atirar:
+// 		for(int i=0; i < contaTiros; i++){
+// 			tiros.Retira(tAux, deuCerto);
+// 			if(deuCerto){
+// 				if(tAux.getForma().getGlobalBounds().intersects(spriteInimigo.getGlobalBounds())){ // quando acerta um inimigo
+// 					std::cout << "acertou" << std::endl;
+// 					tAux.paraNavegar();
+// 					if(!atinge.openFromFile("atinge-inimigo.ogg")){
+//         					std::cout << "ERROR 1" << std::endl;
+//         					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
+//     					}
+//     				atinge.play(); //inicializa a musica
+// 					contaTiros--;
+// 					if(contaTiros == 0) atirou = false;
+// 				}else{
+// 					if(atirou && tAux.getIterador() < 400){
+// 						tAux.navega(10.0f);
+// 						App.draw(tAux.getForma());
+// 						tiros.Insere(tAux, deuCerto);
+// 					}else{ 
+// 						if(tAux.getIterador() == 400){
+// 							tAux.paraNavegar();
+// 							contaTiros--;
+// 							if(contaTiros == 0)	atirou = false;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+

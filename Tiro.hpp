@@ -11,11 +11,13 @@
     
 	Controle de Versão: https://github.com/gabrielissantos/JvTron-3.0
 */
-
+#ifndef TIRO_H
+#define TIRO_H
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
 // Estrutura do tiro
+
 class Tiro{
 	// atributos privados
 	private:
@@ -23,13 +25,17 @@ class Tiro{
 		sf::Vector2f posicao; // posicao do inicio do tiro
 		sf::Vector2f direcao; // para onde aponta o tiro
 		sf::CircleShape forma; // forma desenhável do tiro
-
+        int id;
 	public:
 		Tiro();
 		~Tiro();
+        void setId(int);
+        int getId();
 		void navega(const float & d); // faz o tiro se mover
 		void comecaMover();
 		void setPosition(const sf::Vector2f &);
+        sf::Vector2f getPosition();
+        sf::Vector2f getDirecao();
 		void setDirecao(const sf::Vector2f &);
 		void paraNavegar(); // faz o tiro parar de se mover
 		float getIterador() const;
@@ -48,14 +54,25 @@ Tiro::Tiro(){
 };
 
 Tiro::~Tiro(){};
-
+void Tiro::setId(int x){
+    id=x;
+};
+int Tiro::getId(){
+    
+    return id;
+};
 void Tiro::navega(const float & passo){
 	if(iMovimento != -1){
 		forma.setPosition(posicao + direcao*iMovimento);
 		iMovimento += passo;		
 	}
 };
-
+sf::Vector2f Tiro::getPosition(){
+    return posicao;
+};
+sf::Vector2f Tiro::getDirecao(){
+    return direcao;
+};
 void Tiro::comecaMover(){ if(iMovimento == -1) iMovimento = 0; };
 
 void Tiro::setPosition(const sf::Vector2f & posicao){
@@ -77,3 +94,4 @@ sf::CircleShape Tiro::getForma() const { return forma; };
 sf::Vector2f Tiro::getPosition() const { return posicao; };
 
 float Tiro::getIterador() const {return iMovimento;};
+#endif
