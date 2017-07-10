@@ -29,9 +29,7 @@ class Lista{
         bool estaNaLista(Gen& x);
         void insereAEsquerdaDeP(Gen&,bool&);
         void removeP(Gen&,bool&);
-        void remove(Gen& x,bool& deuCerto);/*
-        void removePCaixa(Item& x,bool& deuCerto);*/
-        bool estaNaListaCaixa(Gen& x);
+        void remove(Gen& x,bool& deuCerto);
         void atualizaP(Gen& x,bool& deuCerto);
 };
 

@@ -27,39 +27,46 @@ const short int maxNumeroVidas = 3; // constante de maximo numero de vidas
 
 class Jogo : public Tela{
 private:
+    //listas de tiro
 	Lista <Tiro> tiros;
     Lista <Tiro> tirosInimigo;
+    
+    //lista de inimigos
     Lista <NaveInimigo> navesInimigas;
-    sf::RectangleShape a;
+    
+    //nave do heroi
 	Nave * nave;
-	unsigned short int municao;
 	sf::Sprite background;
+    //quantidade de tiros do heori e do inimigo
     int quantTirosHeroi;
     int quantTirosInimigo;
+    //quantidade de inimigos
     int quantInimigo;
+    //musicas
 	sf::Music tiro;
 	sf::Music atinge;
     sf::Font fonte;
+    //texto do score
     sf::Text scoreText;
     NaveInimigo naveInimigo;
 	void obedecerToroide(Nave*, const float &, const float &);
 public:
 	Jogo();
-    int score;
 	~Jogo();
     void gerarInimigos();
-	virtual int Executar(sf::RenderWindow&);
+	virtual int Executar(sf::RenderWindow&,int &score);
 };
 
 Jogo::Jogo(){
-	municao = 1; // numero
 	quantInimigo=0;
 	nave = new Nave("heroi-nave-jogo3.png");
     
+    //cria a lista inimigos
     navesInimigas.cria();
     
+    //set os valores da nave
     naveInimigo.criarNave();
-    score=0;
+    naveInimigo.resetAtirou();
     naveInimigo.texture.loadFromFile("inimiga-nave-jogo3.png");
     naveInimigo.spriteNave.setTexture(naveInimigo.texture);
     
@@ -75,18 +82,35 @@ Jogo::~Jogo(){
 void Jogo::gerarInimigos(){
     bool deuCerto;
     int i;
+    //decide qual canto as naves irão nascer
+    int canto;
     
     if(navesInimigas.getQuant()  == 0 ){
         
         for(i =0 ; i<4;i++){
             naveInimigo.setId(quantInimigo);
             quantInimigo++;
-            naveInimigo.setPosition(sf::Vector2f(rand() %  600 + 100 , rand() %  400 + 100 ));
+            canto = rand() % 4;
+            switch(canto){
+                case 0:
+                    naveInimigo.setPosition(sf::Vector2f(0 , rand() %  600 ));
+                    break;
+                case 1:
+                    naveInimigo.setPosition(sf::Vector2f(800 , rand() %  600 ));
+                    break;
+                case 2:
+                    naveInimigo.setPosition(sf::Vector2f(rand() % 800 ,   0 ));
+                    break;
+                case 3:
+                    naveInimigo.setPosition(sf::Vector2f(rand() % 800 ,   600 ));
+                    break;
+            }
+            //insere a nave gerada na lista def inimigos
             navesInimigas.insere(naveInimigo,deuCerto);
         }
     }
 };
-int Jogo::Executar(sf::RenderWindow & App){
+int Jogo::Executar(sf::RenderWindow & App,int &score){
 	// armazenando o tamanho atual da tela
 	float iteradorVel = 0; // auxiliar para velocidade da nave
 	bool inercia = false;
@@ -95,14 +119,22 @@ int Jogo::Executar(sf::RenderWindow & App){
 	float altura = App.getSize().y;
 	float largura = App.getSize().x;
 	bool atirou = false;
-
+    
+    //pega os arquivos de som
+    tiro.openFromFile("atinge-inimigo.ogg");
+    atinge.openFromFile("mata-inimigo.ogg");
+    
+    //pilha de sprites para a vida
 	Pilha<sf::Sprite> vidas;
 	sf::Sprite auxVidas;
-	int contaTiros = 0; // conta tiros do heroi
+    
 	bool deuCerto = true;
-	Tiro  tiroTemplate;
+    
+    //bool para verificar se adi
     bool adicionarTiro =false;
+    
     Tiro tiroAuxSpace;
+    //cria as listas de tiro
     tiros.cria();
     tirosInimigo.cria();
 	// background
@@ -133,7 +165,6 @@ int Jogo::Executar(sf::RenderWindow & App){
 
     // comecando no meio
 	nave->setPosition(sf::Vector2f(largura/2,altura/2));
-	tiroTemplate.setPosition(nave->getFrente());
 	deuCerto = true;
 	//  Aqui q vai tudo do jogo. 
 	sf::Event evento; // eventos de jogo
@@ -145,7 +176,7 @@ int Jogo::Executar(sf::RenderWindow & App){
 				return (-1);
 			}
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-                nave->andaFrente(2); // tem q ser inteiro pq, se nao, n da pra chegar a 0 com double (wtf, neh)
+                nave->andaFrente(2);
                 if(!atirou){
                     tiroAuxSpace.setPosition(nave->getFrente());
                     tiroAuxSpace.setDirecao(nave->getDirecao());
@@ -159,7 +190,6 @@ int Jogo::Executar(sf::RenderWindow & App){
 						if(!atirou){
 							tiroAuxSpace.setPosition(nave->getFrente());
                             tiroAuxSpace.setDirecao(nave->getDirecao());
-							//std::cout << "direcao: " << nave->getDirecao().x << "; " << nave->getDirecao().y << std::endl; 
 						}
                 }else{
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){ 
@@ -204,14 +234,16 @@ int Jogo::Executar(sf::RenderWindow & App){
                 tiroAuxSpace.setDirecao(nave->getDirecao());
 			
 		}
+		//adiciona um novo tiro na lista de tiros do heroi
         if(adicionarTiro){
-            printf("Ta indoooooo");
+            tiro.play();
             tiroAuxSpace.setId(quantTirosHeroi);
             quantTirosHeroi++;
             tiroAuxSpace.comecaMover();
             tiros.insere(tiroAuxSpace, deuCerto);
             adicionarTiro = false;
         }
+        //percorre a lista de inimigos
         Tiro auxTiroInimigo;
         tirosInimigo.PegaOPrimeiro(auxTiroInimigo,deuCerto);
          while(deuCerto){
@@ -219,6 +251,7 @@ int Jogo::Executar(sf::RenderWindow & App){
             if(auxTiroInimigo.getForma().getGlobalBounds().intersects(nave->getSprite().getGlobalBounds())){
                 tirosInimigo.removeP(auxTiroInimigo,deuCerto);
                 vidas.Desempilha(auxVidas, deuCerto);
+                atinge.play();
             }else{
                 auxTiroInimigo.navega(0.03f);
                 tirosInimigo.atualizaP(auxTiroInimigo,deuCerto);
@@ -240,6 +273,7 @@ int Jogo::Executar(sf::RenderWindow & App){
                 if(auxTiro.getForma().getGlobalBounds().intersects(auxNaveInimiga.getSprite().getGlobalBounds())){
                     tiros.removeP(auxTiro,deuCerto);
                     score+=10;
+                    atinge.play();
                     navesInimigas.removeP(auxNaveInimiga,deuCerto);
                     morreu=true;
                 }else{
@@ -255,6 +289,7 @@ int Jogo::Executar(sf::RenderWindow & App){
             if(!morreu){
                 auxNaveInimiga.visao(nave->getSprite());
                 if(auxNaveInimiga.getAtirou()){
+                    tiro.play();
                     Tiro tiroAuxInimigo;
                     tiroAuxInimigo.setId(quantTirosInimigo);
                     quantTirosInimigo++;
@@ -294,48 +329,3 @@ void Jogo::obedecerToroide(Nave * nave, const float & largura, const float & alt
         
     nave->resetFrente();
 };
-// 		// rotina para atirar:
-// 		for(int i=0; i < contaTiros; i++){
-// 			tiros.Retira(tAux, deuCerto);
-// 			if(deuCerto){
-// 				if(tAux.getForma().getGlobalBounds().intersects(spriteInimigo.getGlobalBounds())){ // quando acerta um inimigo
-// 					std::cout << "acertou" << std::endl;
-// 					tAux.paraNavegar();
-// 					if(!atinge.openFromFile("atinge-inimigo.ogg")){
-//         					std::cout << "ERROR 1" << std::endl;
-//         					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
-//     					}
-//     				atinge.play(); //inicializa a musica
-// 					contaTiros--;
-// 					if(contaTiros == 0) atirou = false;
-// 				}else{
-// 					if(atirou && tAux.getIterador() < 400){
-// 						tAux.navega(10.0f);
-// 						App.draw(tAux.getForma());
-// 						tiros.Insere(tAux, deuCerto);
-// 					}else{ 
-// 						if(tAux.getIterador() == 400){
-// 							tAux.paraNavegar();
-// 							contaTiros--;
-// 							if(contaTiros == 0)	atirou = false;
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 						if(!tiro.openFromFile("laser.ogg")){
-//         					std::cout << "ERROR 1" << std::endl;
-//         					return 1; //retorna um se a leitura da musica não foi efetuada com sucesso
-//     					}
-//     					tiro.play(); //inicializa a musica
-// 						if(!atirou){ // 1a vez atirando
-// 							while(deuCerto) tiros.Retira(tAux, deuCerto);
-// 							atirou = true;
-// 							contaTiros = 0;
-// 						}
-// 						if(contaTiros < 3){
-// 							contaTiros++;
-//                             tiros.Insere(tiroTemplate, deuCerto);
-// 							tiros.Insere(tiroTemplate, deuCerto);
-// 						}
-// 						

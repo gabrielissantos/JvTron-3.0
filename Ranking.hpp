@@ -39,12 +39,10 @@ void desenha(sf::RenderWindow &) const;
 public: // métodos privados
 	Ranking(float larg, float alt);
 	~Ranking();
-    
-    int score;
     void MovaParaEsquerda();
 	void MovaParaDireita();
 	int ItemApertado();
-	virtual int Executar(sf::RenderWindow& App);
+	virtual int Executar(sf::RenderWindow& App,int &score);
 };
 
 // Implementação dos métodos do menu
@@ -53,7 +51,7 @@ public: // métodos privados
 // Recebe como parâmetro a largura e altura (utiliza-se as medidas da janela principal da aplicação)
 // Configuração inicial de atributos
 Ranking::Ranking(float larg, float alt): maxNumeroTeclas(4), maxNumeroBotoes(2){
-std::string textoBotao[maxNumeroBotoes] = { "Enviar", "Seguinte"}; // textoBotao do botão
+std::string textoBotao[maxNumeroBotoes] = { "Enviar", "Voltar"}; // textoBotao do botão
 
 	numeroItem = 0;
 	botao = new sf::Text[maxNumeroBotoes]; // vetor de botoes
@@ -115,7 +113,7 @@ Ranking::~Ranking(){
 
 // Executar
 // Recebe por referência a janela da biblioteca gráfica
-int Ranking::Executar(sf::RenderWindow &App){
+int Ranking::Executar(sf::RenderWindow &App, int &score){
 // declaracao de variaveis
 	sf::Event Event; // eventos de jogo
 	bool executando = true;
@@ -278,7 +276,7 @@ int Ranking::Executar(sf::RenderWindow &App){
 								return 0;
 								break;
 							case 1: // proxima pagina
-								return 3;
+								return 0;
 								break;
 						}
 					default:
@@ -294,7 +292,7 @@ int Ranking::Executar(sf::RenderWindow &App){
 		App.clear();
 		desenha(App); // chamada de método desenha
         App.draw(digitaNome);
-        Nome.setString(nome);
+        Nome.setString(nomeString);
         scoreString= std::to_string(score);
         scoreText.setString("Score : " + scoreString);
         App.draw(scoreText);

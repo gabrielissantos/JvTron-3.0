@@ -36,7 +36,7 @@ private:
 public: // métodos privados
 	Menu(float larg, float alt);
 	~Menu();
-	virtual int Executar(sf::RenderWindow& App);
+	virtual int Executar(sf::RenderWindow& App,int &score);
 };
 
 // Implementação dos métodos do menu
@@ -85,7 +85,7 @@ Menu::~Menu(){ delete botao; }; // fim Destrutor
 
 // Executar
 // Recebe por referência a janela da biblioteca gráfica
-int Menu::Executar(sf::RenderWindow &App){
+int Menu::Executar(sf::RenderWindow &App,int &score){
 	// declaracao de variaveis
 	sf::Event Event; // eventos de jogo
 

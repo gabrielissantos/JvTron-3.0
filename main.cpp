@@ -18,7 +18,7 @@
 #include <string>
 #include "TodasTelas.hpp"
 /* isso é o comando no terminal linux pra compilar o programa
-    g++ -c main.cpp && g++ main.o TodasTelas.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system && ./sfml-app 
+    g++ -c main.cpp && g++ main.o TodasTelas.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system - lcurl && ./sfml-app 
 */
 
 // main()
@@ -50,19 +50,16 @@ int main (){
     }
     musica.setLoop(true); //music e entra num loop para que a musica reinicie quando ela acabar
     musica.play(); //inicializa a musica
-
+    int score = 0;
     // loop principal
     while (numeroTela >= 0){
        // std::cout <<"Tela: "<< numeroTela << std::endl;
-        if(numeroTela == 2 ){
-                s3->score = s1->score;
-        }
-        if( (numeroTela = telas[numeroTela]->Executar(App)) == 1 ){// chamada do metodo que faz funcionar a tela atual
-            telas[1] = new Jogo();
-            if(numeroTela == 2 ){
-                s3->score = s1->score;
+        if( (numeroTela = telas[numeroTela]->Executar(App,score)) == 1 );// chamada do metodo que faz funcionar a tela atual
+            if(numeroTela == 1 ){
+                telas[1] = new Jogo();
+                score = 0;
             }
-        }
+        
         
     } // fim loop principal
 

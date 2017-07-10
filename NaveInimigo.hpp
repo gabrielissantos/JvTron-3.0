@@ -112,25 +112,7 @@ void NaveInimigo::setDirecaoTiro(const sf::Vector2f & direcao){
 	this->direcaoT = direcao;
 };
 NaveInimigo::NaveInimigo(string s){
-// 	vel=0;
-//     speedT=0;
-//     achou=false;
-// 	anguloAtual = 0;
-// 	direcao = sf::Vector2f(1.0f,0.0f);
-// 	frente = sf::Vector2f(imagem.getSize().x/2, 0.0f);
-// 	// importando a imagem de forma mais geral possível
-// 	imagem.loadFromFile(s);
-//     speed=1;
-//     movimentoTempo = sf::seconds(0);
-//     atacarTempo = sf::seconds(0);
-//     movimentoClock.restart();
-//     atacarClock.restart();
-// 	texture.loadFromImage(imagem);
-// 	spriteNave.setTexture(texture);
-//     spriteNave.setPosition(sf::Vector2f(300,300));
-//     posicaoHeroi=sf::Vector2f(0,0);
-// 	spriteNave.setOrigin(imagem.getSize().x/2, imagem.getSize().y/2);
-//     setPositionTiro(sf::Vector2f(1,0));
+
 };
 
 NaveInimigo::~NaveInimigo(){
@@ -149,7 +131,6 @@ sf::RectangleShape NaveInimigo::visao(sf::Sprite heroi){
     retanguloHeroi.setPosition(sf::Vector2f(heroi.getPosition().x - 100 ,heroi.getPosition().y - 100));
     raio.setPosition(spriteNave.getPosition());
     localTiro = raio.getPosition();
-//     direcaoT = heroi.getPosition() - 
     float norma = sqrt((heroi.getPosition().x -  spriteNave.getPosition().x)*(heroi.getPosition().x -  spriteNave.getPosition().x) + (heroi.getPosition().y -  spriteNave.getPosition().y)*(heroi.getPosition().y -  spriteNave.getPosition().y));
     float graus = asin((spriteNave.getPosition().y - heroi.getPosition().y) / norma);
     graus =  -(graus * 180)/3.14;
