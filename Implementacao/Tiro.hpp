@@ -1,15 +1,15 @@
 /*
-	JvTron: Trabalho 3
-	Departamento de Computação
-	UFSCar Universidade Federal de São Carlos
-	Disciplina: Estrutura de Dados
-	Professor: Roberto Ferrari
-	Aluno(a):								RA:
-		João Gabriel Melo Barbirato			726546
-		Leonardo de Oliveira Peralta		726556
-		Gabrieli Santos						726523
+    JvAsteroids: Trabalho 3
+    Departamento de Computação
+    UFSCar Universidade Federal de São Carlos
+    Disciplina: Estrutura de Dados
+    Professor: Roberto Ferrari
+    Aluno(a):                               RA:
+        João Gabriel Melo Barbirato         726546
+        Leonardo de Oliveira Peralta        726556
+        Gabrieli Santos                     726523
     
-	Controle de Versão: https://github.com/gabrielissantos/JvTron-3.0
+    Controle de Versão: https://github.com/gabrielissantos/JvTron-3.0
 */
 #ifndef TIRO_H
 #define TIRO_H
