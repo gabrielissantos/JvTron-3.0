@@ -21,57 +21,51 @@ using std::string;
 
 class NaveInimigo{
 	public:
-		NaveInimigo(string=""); // inserir nome da imagem
-		~NaveInimigo();
 		void setPosition(const sf::Vector2f &); // determina posição
 		void rodaAntiHorario(); // faz a nave rodar no sentido anti-horário
 		void rodaHorario(); // faz a nave rodar no sentido horário
 		void andaFrente(const float &); // faz a nave andar pra frente
 		float getAngulo() const;
-		float getVel() const;
 		sf::Sprite getSprite() const; // retorna a instancia de sprite
 		sf::Vector2f getPosition() const; // retorna a posicao da nave
-		sf::RectangleShape visao(sf::Sprite heroi);
-        bool getAtirou();
-        void resetAtirou();
-        sf::Vector2f getLocalTiro();
-        void setId(int);
-        int getId();
-        void criarNave();
+		sf::RectangleShape visao(sf::Sprite heroi);   //visao da nave inimiga
+        bool getAtirou();   //verifica se a nave atirou
+        void resetAtirou(); //deixa que a nave não atirou
+        sf::Vector2f getLocalTiro(); // pega o posicao do tiro
+        void setId(int);    //set o id da nave
+        int getId();        //pega o id da nave
+        void criarNave();   //cria a nave
         sf::Sprite spriteNave; // instancia de sprite
 		sf::Texture texture; // instancia de textura
 		sf::Image imagem; 
 	private:
-        int id;
+        int id;     //id da nave
 		float anguloAtual; // angulo atual relativo
 		float posicaoAtual; //posicao atual relativa
         sf::Vector2f posicaoT; // posicao do inicio do tiro
 		sf::Vector2f direcaoT; // para onde aponta o tiro
-		int vidas;
-		float vel; // velocidade da nave
-        sf::Vector2f posicaoHeroi;
-		sf::Vector2f direcaoVel;
+		int vidas;    //int de vida
+        sf::Vector2f posicaoHeroi; //posicao do heroi
 		sf::Vector2f direcao; // direcao q a nave aponta
 		sf::Vector2f frente; // parte de frente da nave
 		sf::Vector2f posicao; //posicao que a nave ocupa// arquivo de iamgem		
-        float speed,speedT;
-        void setPositionTiro(const sf::Vector2f &);
-		void setDirecaoTiro(const sf::Vector2f &);
-        bool achou;
-        sf::Clock movimentoClock;
-        sf::Time movimentoTempo;
-        sf::Clock atacarClock;
-        sf::Time atacarTempo;
-        void Mover(sf::Vector2f heroi,float);
-        bool atirou;
-        sf::Vector2f localTiro;
+        float speed;
+        void setPositionTiro(const sf::Vector2f &); //seta a posicao do tiro
+		void setDirecaoTiro(const sf::Vector2f &); //seta a direcao do tiro
+        bool achou; //achou o inimigo
+        sf::Clock movimentoClock; //clock do movimento
+        sf::Time movimentoTempo; // tempo para o movimento
+        sf::Clock atacarClock; //clock do ataque
+        sf::Time atacarTempo; //tempo do ataque
+        void Mover(sf::Vector2f heroi,float); // move a nave
+        bool atirou;    //bool do tiro
+        sf::Vector2f localTiro; //local do tiro
 }; // angulo de rotacao em radianos
 sf::Vector2f NaveInimigo::getLocalTiro(){
     return localTiro;
 }
+//cria a nave
 void NaveInimigo::criarNave(){
-    vel=0;
-    speedT=0;
     achou=false;
 	anguloAtual = 0;
 	direcao = sf::Vector2f(1.0f,0.0f);
@@ -111,12 +105,7 @@ void NaveInimigo::setPositionTiro(const sf::Vector2f & posicao){
 void NaveInimigo::setDirecaoTiro(const sf::Vector2f & direcao){
 	this->direcaoT = direcao;
 };
-NaveInimigo::NaveInimigo(string s){
-
-};
-
-NaveInimigo::~NaveInimigo(){
-};
+//visao da nave inimiga - verifica onde o heroi esta , gira para ele e comeca a ir na sua direcao
 sf::RectangleShape NaveInimigo::visao(sf::Sprite heroi){
     sf::RectangleShape raio;
     sf::RectangleShape nave;
@@ -151,6 +140,8 @@ sf::RectangleShape NaveInimigo::visao(sf::Sprite heroi){
         }
     return raio;
 }
+
+//move a nave inimiga
 void NaveInimigo::Mover(sf::Vector2f heroi,float norma){
     
     movimentoTempo= movimentoClock.getElapsedTime();
@@ -185,7 +176,4 @@ float NaveInimigo::getAngulo() const{
 	return anguloAtual;
 };
 
-float NaveInimigo::getVel() const{
-	return vel;
-}
 #endif

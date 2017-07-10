@@ -237,17 +237,19 @@ int Jogo::Executar(sf::RenderWindow & App,int &score){
 		//adiciona um novo tiro na lista de tiros do heroi
         if(adicionarTiro){
             tiro.play();
+            tiroAuxSpace.setColor(sf::Color(0,255,255));
             tiroAuxSpace.setId(quantTirosHeroi);
             quantTirosHeroi++;
             tiroAuxSpace.comecaMover();
             tiros.insere(tiroAuxSpace, deuCerto);
             adicionarTiro = false;
         }
-        //percorre a lista de inimigos
+        //percorre a lista de tiros do inimigos
         Tiro auxTiroInimigo;
         tirosInimigo.PegaOPrimeiro(auxTiroInimigo,deuCerto);
          while(deuCerto){
             App.draw(auxTiroInimigo.getForma());
+            //verifica se o tiro acertou
             if(auxTiroInimigo.getForma().getGlobalBounds().intersects(nave->getSprite().getGlobalBounds())){
                 tirosInimigo.removeP(auxTiroInimigo,deuCerto);
                 vidas.Desempilha(auxVidas, deuCerto);
@@ -258,6 +260,7 @@ int Jogo::Executar(sf::RenderWindow & App,int &score){
             }
             tirosInimigo.PegaOProximo(auxTiroInimigo,deuCerto);
         }
+        //percorre a lista de  inimigos
         NaveInimigo auxNaveInimiga;
         auxNaveInimiga.criarNave();
         navesInimigas.PegaOPrimeiro(auxNaveInimiga,deuCerto);
@@ -268,8 +271,8 @@ int Jogo::Executar(sf::RenderWindow & App,int &score){
             Tiro auxTiro;
             tiros.PegaOPrimeiro(auxTiro,deuCerto);
             while(deuCerto){
-                App.draw(auxTiro.getForma());
-            
+                App.draw(auxTiro.getForma());      
+                //verifica se o tiro do heroi acertou o inimigo
                 if(auxTiro.getForma().getGlobalBounds().intersects(auxNaveInimiga.getSprite().getGlobalBounds())){
                     tiros.removeP(auxTiro,deuCerto);
                     score+=10;
@@ -288,9 +291,11 @@ int Jogo::Executar(sf::RenderWindow & App,int &score){
             movimentaTiros++;
             if(!morreu){
                 auxNaveInimiga.visao(nave->getSprite());
+                //adiciona um tiro na lista dos tiros do inimigo
                 if(auxNaveInimiga.getAtirou()){
                     tiro.play();
                     Tiro tiroAuxInimigo;
+                    tiroAuxInimigo.setColor(sf::Color(255,0,0));
                     tiroAuxInimigo.setId(quantTirosInimigo);
                     quantTirosInimigo++;
                     tiroAuxInimigo.comecaMover();
@@ -317,6 +322,7 @@ int Jogo::Executar(sf::RenderWindow & App,int &score){
 	}
 };
 
+//metodo para o funcionamento do toroide
 void Jogo::obedecerToroide(Nave * nave, const float & largura, const float & altura){
 	if(nave->getPosition().x > largura)
 		nave->setPosition(sf::Vector2f(0.0f,nave->getPosition().y)); // limite direito da tela

@@ -29,30 +29,34 @@ class Tiro{
 	public:
 		Tiro();
 		~Tiro();
-        void setId(int);
-        int getId();
+        
+        void setColor(sf::Color);//seta o cor do tiro
+        void setId(int);    //seta o id do tiro
+        int getId();    //pega o id do tiro
 		void navega(const float & d); // faz o tiro se mover
-		void comecaMover();
+		void comecaMover(); //comeca a mover o tiro
 		void setPosition(const sf::Vector2f &);
-        sf::Vector2f getPosition();
-        sf::Vector2f getDirecao();
-		void setDirecao(const sf::Vector2f &);
+        sf::Vector2f getPosition(); //pega a posicao inicial do tiro
+        sf::Vector2f getDirecao();  //pega a direcao do tiro
+		void setDirecao(const sf::Vector2f &); //seta a direcao do tiro
 		void paraNavegar(); // faz o tiro parar de se mover
 		float getIterador() const;
 		int numeroTiro;
-
+        
 		sf::Vector2f getPosition() const;
 		sf::CircleShape getForma() const;
 };
 
 Tiro::Tiro(){
-	forma.setFillColor(sf::Color(255,0,255));
+	forma.setFillColor(sf::Color(0,255,255));
 	forma.setRadius(2.0f);
 	forma.setOrigin(sf::Vector2f(forma.getRadius(),forma.getRadius()));
     direcao = sf::Vector2f(1.0f, 0.0f);
     iMovimento = -1;
 };
-
+void Tiro::setColor(sf::Color cor){
+    forma.setFillColor(cor);
+};
 Tiro::~Tiro(){};
 void Tiro::setId(int x){
     id=x;

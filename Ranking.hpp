@@ -126,6 +126,7 @@ int Ranking::Executar(sf::RenderWindow &App, int &score){
 			// ao pressionar botões
 			if (Event.type == sf::Event::KeyPressed){
 				switch (Event.key.code){
+                    //cases para cada tecla
 					case sf::Keyboard::Right:
 						MovaParaDireita();
 						break;
@@ -271,6 +272,7 @@ int Ranking::Executar(sf::RenderWindow &App, int &score){
 					case sf::Keyboard::Return:
 						switch(ItemApertado()){
 							case 0: // menu
+                                //adiciona o score do jogador no banco
                                 Request request;
                                 request.enviarRanking(nomeString,scoreString);
 								return 0;
