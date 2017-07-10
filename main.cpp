@@ -40,7 +40,9 @@ int main (){
     telas.push_back(s0);
     Jogo * s1 = new Jogo();
     telas.push_back(s1);
-    Ranking * s3 = new Ranking(App.getSize().x, App.getSize().y);
+    Ranking * s2 = new Ranking(App.getSize().x, App.getSize().y);
+    telas.push_back(s2);
+    Regras * s3 = new Regras(App.getSize().x, App.getSize().y);
     telas.push_back(s3);
 
     //inicialização da musica

@@ -23,4 +23,6 @@
 #include "Menu.hpp"
 #include "Jogo.hpp"
 #include "Ranking.hpp"
+#include "Regras.hpp"
+
 #endif // fim da inclusão
