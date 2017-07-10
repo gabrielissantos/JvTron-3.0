@@ -199,7 +199,7 @@ int Jogo::Executar(sf::RenderWindow & App,int &score){
                             tiroAuxSpace.setDirecao(nave->getDirecao());
 						}
                     }else{
-                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z)){
+                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
                             adicionarTiro = true;
                             tiroAuxSpace.setPosition(nave->getFrente());
                             tiroAuxSpace.setDirecao(nave->getDirecao());
